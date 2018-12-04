@@ -9,6 +9,8 @@ import javax.persistence.Id;
 import javax.persistence.Table;
 import javax.validation.constraints.NotNull;
 
+import com.revature.purposeEnum.Purpose;
+
 @Entity
 @Table(name="Reservations")
 public class Reservation {
@@ -17,16 +19,25 @@ public class Reservation {
 	@GeneratedValue(strategy=GenerationType.IDENTITY)
 	private int id;
 	
+	
 	@NotNull
+	private Purpose purpose;
 	private LocalDateTime startTime;
 	private LocalDateTime endTime;
 	private int resourceID;
 	private String userEmail;
+	private boolean cancelled;
 	public int getId() {
 		return id;
 	}
 	public void setId(int id) {
 		this.id = id;
+	}
+	public Purpose getPurpose() {
+		return purpose;
+	}
+	public void setPurpose(Purpose purpose) {
+		this.purpose = purpose;
 	}
 	public LocalDateTime getStartTime() {
 		return startTime;
@@ -52,30 +63,40 @@ public class Reservation {
 	public void setUserEmail(String userEmail) {
 		this.userEmail = userEmail;
 	}
+	public boolean isCancelled() {
+		return cancelled;
+	}
+	public void setCancelled(boolean cancelled) {
+		this.cancelled = cancelled;
+	}
 	public Reservation() {
 		super();
 		// TODO Auto-generated constructor stub
 	}
-	public Reservation(int id, @NotNull LocalDateTime startTime, LocalDateTime endTime, int resourceID,
-			String userEmail) {
+	public Reservation(int id, @NotNull Purpose purpose, LocalDateTime startTime, LocalDateTime endTime, int resourceID,
+			String userEmail, boolean cancelled) {
 		super();
 		this.id = id;
+		this.purpose = purpose;
 		this.startTime = startTime;
 		this.endTime = endTime;
 		this.resourceID = resourceID;
 		this.userEmail = userEmail;
+		this.cancelled = cancelled;
 	}
 	@Override
 	public String toString() {
-		return "Reservation [id=" + id + ", startTime=" + startTime + ", endTime=" + endTime + ", resourceID="
-				+ resourceID + ", userEmail=" + userEmail + "]";
+		return "Reservation [id=" + id + ", purpose=" + purpose + ", startTime=" + startTime + ", endTime=" + endTime
+				+ ", resourceID=" + resourceID + ", userEmail=" + userEmail + ", cancelled=" + cancelled + "]";
 	}
 	@Override
 	public int hashCode() {
 		final int prime = 31;
 		int result = 1;
+		result = prime * result + (cancelled ? 1231 : 1237);
 		result = prime * result + ((endTime == null) ? 0 : endTime.hashCode());
 		result = prime * result + id;
+		result = prime * result + ((purpose == null) ? 0 : purpose.hashCode());
 		result = prime * result + resourceID;
 		result = prime * result + ((startTime == null) ? 0 : startTime.hashCode());
 		result = prime * result + ((userEmail == null) ? 0 : userEmail.hashCode());
@@ -90,12 +111,16 @@ public class Reservation {
 		if (getClass() != obj.getClass())
 			return false;
 		Reservation other = (Reservation) obj;
+		if (cancelled != other.cancelled)
+			return false;
 		if (endTime == null) {
 			if (other.endTime != null)
 				return false;
 		} else if (!endTime.equals(other.endTime))
 			return false;
 		if (id != other.id)
+			return false;
+		if (purpose != other.purpose)
 			return false;
 		if (resourceID != other.resourceID)
 			return false;
@@ -111,6 +136,8 @@ public class Reservation {
 			return false;
 		return true;
 	}
+	
+	
 	
 	
 	
