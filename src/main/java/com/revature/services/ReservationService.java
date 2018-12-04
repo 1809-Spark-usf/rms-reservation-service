@@ -5,7 +5,6 @@ import java.time.LocalDateTime;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.revature.exceptions.BadRequestException;
 import com.revature.models.Reservation;
 import com.revature.repositories.ReservationRepository;
 
@@ -23,6 +22,10 @@ public class ReservationService {
 	public Reservation getReservationByUserEmail(String email) {
 		return reservationRepository.getByUserEmail(email);
 	};
+	
+	public Reservation getReservationById(int id) {
+		return reservationRepository.getOne(id);
+	}
 
 	public Reservation[] getAllReservations() {
 		return reservationRepository.getAll();

@@ -27,6 +27,7 @@ public class Reservation {
 	private int resourceID;
 	private String userEmail;
 	private boolean cancelled;
+	private boolean approved;
 	public int getId() {
 		return id;
 	}
@@ -69,12 +70,18 @@ public class Reservation {
 	public void setCancelled(boolean cancelled) {
 		this.cancelled = cancelled;
 	}
+	public boolean isApproved() {
+		return approved;
+	}
+	public void setApproved(boolean approved) {
+		this.approved = approved;
+	}
 	public Reservation() {
 		super();
 		// TODO Auto-generated constructor stub
 	}
 	public Reservation(int id, @NotNull Purpose purpose, LocalDateTime startTime, LocalDateTime endTime, int resourceID,
-			String userEmail, boolean cancelled) {
+			String userEmail, boolean cancelled, boolean approved) {
 		super();
 		this.id = id;
 		this.purpose = purpose;
@@ -83,16 +90,19 @@ public class Reservation {
 		this.resourceID = resourceID;
 		this.userEmail = userEmail;
 		this.cancelled = cancelled;
+		this.approved = approved;
 	}
 	@Override
 	public String toString() {
 		return "Reservation [id=" + id + ", purpose=" + purpose + ", startTime=" + startTime + ", endTime=" + endTime
-				+ ", resourceID=" + resourceID + ", userEmail=" + userEmail + ", cancelled=" + cancelled + "]";
+				+ ", resourceID=" + resourceID + ", userEmail=" + userEmail + ", cancelled=" + cancelled + ", approved="
+				+ approved + "]";
 	}
 	@Override
 	public int hashCode() {
 		final int prime = 31;
 		int result = 1;
+		result = prime * result + (approved ? 1231 : 1237);
 		result = prime * result + (cancelled ? 1231 : 1237);
 		result = prime * result + ((endTime == null) ? 0 : endTime.hashCode());
 		result = prime * result + id;
@@ -111,6 +121,8 @@ public class Reservation {
 		if (getClass() != obj.getClass())
 			return false;
 		Reservation other = (Reservation) obj;
+		if (approved != other.approved)
+			return false;
 		if (cancelled != other.cancelled)
 			return false;
 		if (endTime == null) {
@@ -136,9 +148,6 @@ public class Reservation {
 			return false;
 		return true;
 	}
-	
-	
-	
 	
 	
 		
