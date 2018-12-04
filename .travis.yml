@@ -1,9 +1,15 @@
 language: java
 
+addons:
+  sonarcloud:
+    organization: "1809-spark-usf"
+    
+    
+
 jobs:
   include:
     - stage: test
       script: mvn test
     
-    - stage: build
-      script: mvn package 
+    - stage: build-quality
+      script: mvn clean org.jacoco:jacoco-maven-plugin:prepare-agent package sonar:sonar
