@@ -1,5 +1,9 @@
 package com.revature.models;
 
+
+public class Reservation {
+
+
 import java.time.LocalDateTime;
 
 import javax.persistence.Entity;
@@ -155,4 +159,5 @@ public class Reservation {
 	}
 	
 		
+
 }

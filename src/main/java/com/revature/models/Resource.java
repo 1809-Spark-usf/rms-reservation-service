@@ -1,5 +1,10 @@
 package com.revature.models;
 
+
+public class Resource {
+
+}
+
 import java.time.LocalDateTime;
 
 import javax.persistence.Column;
@@ -270,3 +275,4 @@ public class Resource {
 	}
 	
 }
+
