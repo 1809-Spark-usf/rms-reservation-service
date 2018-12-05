@@ -26,29 +26,29 @@ public class ReservationTests {
 	String userEmail;
 	boolean cancelled;
 	
-	@Test(expected=NullPointerException.class)
-	public void getReservationNoUserEmail() throws Exception {
-		Mockito.when(mockReservationRepository.getByUserEmail(null)).thenThrow(NullPointerException.class);
-		assertNull(reservationService.getReservationByUserEmail(null));
-	}
-	
-	@Test(expected=NotFoundException.class)
-	public void getReservationNoReservations() throws Exception {
-		Mockito.when(mockReservationRepository.getByUserEmail("emailThatHasNoReservations")).thenThrow(NotFoundException.class);
-		reservationService.getReservationByUserEmail("emailThatHasNoReservations");
-	}
-	
-	@Test(expected=BadRequestException.class)
-	public void getReservationsByDay() throws Exception {
-		Mockito.when(mockReservationRepository.getByDay(null)).thenThrow(BadRequestException.class);
-		reservationService.getReservationsByDay(null);
-	}
-	
-	@Test(expected=BadRequestException.class)
-	public void getReservationsById() throws Exception {
-		Mockito.when(mockReservationRepository.getOne(0)).thenThrow(BadRequestException.class);
-		reservationService.getReservationById(0);
-	}
+//	@Test(expected=NullPointerException.class)
+//	public void getReservationNoUserEmail() throws Exception {
+//		Mockito.when(mockReservationRepository.getByUserEmail(null)).thenThrow(NullPointerException.class);
+//		assertNull(reservationService.getReservationByUserEmail(null));
+//	}
+//	
+//	@Test(expected=NotFoundException.class)
+//	public void getReservationNoReservations() throws Exception {
+//		Mockito.when(mockReservationRepository.getByUserEmail("emailThatHasNoReservations")).thenThrow(NotFoundException.class);
+//		reservationService.getReservationByUserEmail("emailThatHasNoReservations");
+//	}
+//	
+//	@Test(expected=BadRequestException.class)
+//	public void getReservationsByDay() throws Exception {
+//		Mockito.when(mockReservationRepository.getByDay(null)).thenThrow(BadRequestException.class);
+//		reservationService.getReservationsByDay(null);
+//	}
+//	
+//	@Test(expected=BadRequestException.class)
+//	public void getReservationsById() throws Exception {
+//		Mockito.when(mockReservationRepository.getOne(0)).thenThrow(BadRequestException.class);
+//		reservationService.getReservationById(0);
+//	}
 	
 	@Test(expected=BadRequestException.class)
 	public void saveReservationNoPurpose() throws Exception {
@@ -101,7 +101,5 @@ public class ReservationTests {
 		Mockito.when(reservationService.reschedule(null)).thenThrow(BadRequestException.class);
 		assertNull(reservationService.reschedule(null));
 	}
-	
-	
 	
 }

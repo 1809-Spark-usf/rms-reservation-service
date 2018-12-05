@@ -7,6 +7,7 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Table;
+import javax.persistence.Transient;
 import javax.validation.constraints.NotNull;
 
 import com.revature.purposeEnum.Purpose;
@@ -24,6 +25,10 @@ public class Reservation {
 	private Purpose purpose;
 	private LocalDateTime startTime;
 	private LocalDateTime endTime;
+	
+	@Transient
+	private Resource resource;
+	
 	private int resourceID;
 	private String userEmail;
 	private boolean cancelled;
@@ -148,7 +153,6 @@ public class Reservation {
 			return false;
 		return true;
 	}
-	
 	
 		
 }
