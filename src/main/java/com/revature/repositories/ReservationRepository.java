@@ -1,7 +1,13 @@
 package com.revature.repositories;
 
 
+import java.time.LocalDateTime;
+import java.util.List;
+
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Modifying;
+import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 import org.springframework.data.repository.query.QueryByExampleExecutor;
 import org.springframework.stereotype.Repository;
 
@@ -23,10 +29,15 @@ public interface ReservationRepository extends JpaRepository<Reservation, Intege
 //	Reservation(;
 	
 //	Reservation[] findByUserNameOrPurposeOrStartTimeAndEndTimeOrResourceIdOrCancelledOrApproved();
-
-	Reservation cancel(Reservation reservation);
-
-	Reservation update(Reservation reservation);
+	List<Reservation> findAllResourceIdByStartDateTimeAfterAndEndDateTimeBefore(LocalDateTime startDateTime, LocalDateTime endDateTime);
 	
+	@Modifying
+	@Query("update Reservation r set r.cancelled = true where r.id = :id")
+	Reservation cancel(@Param("id") int id);
+	
+	@Modifying
+	@Query("update Reservation r set r.startTime = :startTime AND r.endTime = :endTime where r.id = :id")
+	Reservation update(@Param("startTime") LocalDateTime startDateTime, 
+			@Param("endTime") LocalDateTime endDateTime, @Param("id") int id);
 	
 }

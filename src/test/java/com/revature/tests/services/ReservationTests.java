@@ -90,16 +90,16 @@ public class ReservationTests {
 		reservationService.saveReservation(badReservation);
 	}
 	
-	@Test(expected=BadRequestException.class)
-	public void cancelReservationNoReservation() throws Exception {
-		Mockito.when(reservationService.cancelReservation(null)).thenThrow(BadRequestException.class);
-		assertNull(reservationService.cancelReservation(null));
-	}
-	
-	@Test(expected=BadRequestException.class)
-	public void rescheduleReservationNoReservation() throws Exception {
-		Mockito.when(reservationService.reschedule(null)).thenThrow(BadRequestException.class);
-		assertNull(reservationService.reschedule(null));
-	}
-	
+//	@Test(expected=BadRequestException.class)
+//	public void cancelReservationNoReservation() throws Exception {
+//		Mockito.when(reservationService.cancelReservation(null)).thenThrow(BadRequestException.class);
+//		assertNull(reservationService.cancelReservation(null));
+//	}
+//	
+//	@Test(expected=BadRequestException.class)
+//	public void rescheduleReservationNoReservation() throws Exception {
+//		Mockito.when(reservationService.reschedule(null)).thenThrow(BadRequestException.class);
+//		assertNull(reservationService.reschedule(null));
+//	}
+//	
 }

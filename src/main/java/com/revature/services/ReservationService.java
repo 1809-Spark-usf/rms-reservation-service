@@ -25,15 +25,22 @@ public class ReservationService {
 	
 //	Example<Reservation> reservationExample = Example.of(reservation);
 	
-	public List<Reservation> getReservationByCriteria(int id, Purpose purpose, 
-			String userEmail, boolean cancelled, boolean approved) {
-		Reservation reservation = new Reservation();
-		reservation.setId(id);
-		reservation.setPurpose(purpose);
-		reservation.setUserEmail(userEmail);
-		reservation.setCancelled(cancelled);
-		reservation.setApproved(approved);
-		return reservationRepository.findAll(Example.of(reservation));
+//	public List<Reservation> getReservationByCriteria(int id, Purpose purpose, 
+//			String userEmail, boolean cancelled, boolean approved) {
+//		Reservation reservation = new Reservation();
+//		reservation.setId(id);
+//		reservation.setPurpose(purpose);
+//		reservation.setUserEmail(userEmail);
+//		reservation.setCancelled(cancelled);
+//		reservation.setApproved(approved);
+//		return reservationRepository.findAll(Example.of(reservation));
+//	}
+	
+	public List<Reservation> getReservationIds(LocalDateTime startDateTime, 
+			LocalDateTime endDateTime) {
+		return reservationRepository
+				.findAllResourceIdByStartDateTimeAfterAndEndDateTimeBefore
+				(startDateTime, endDateTime);
 	}
 
 //	public Reservation getReservationByUserEmail(String email) {
@@ -67,11 +74,11 @@ public class ReservationService {
 		return reservationRepository.save(reservation);		
 	};
 
-	public Reservation cancelReservation(Reservation reservation) {
-		return reservationRepository.cancel(reservation);	
+	public Reservation cancelReservation(int id) {
+		return reservationRepository.cancel(id);	
 	};
 
-	public Reservation reschedule(Reservation reservation) {
-		return reservationRepository.update(reservation);	
+	public Reservation reschedule(LocalDateTime startTime, LocalDateTime endTime, int id) {
+		return reservationRepository.update(endTime, endTime, id);	
 	};
 }
