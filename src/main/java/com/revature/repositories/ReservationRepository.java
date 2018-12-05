@@ -29,15 +29,16 @@ public interface ReservationRepository extends JpaRepository<Reservation, Intege
 //	Reservation(;
 	
 //	Reservation[] findByUserNameOrPurposeOrStartTimeAndEndTimeOrResourceIdOrCancelledOrApproved();
-	List<Reservation> findAllResourceIdByStartDateTimeAfterAndEndDateTimeBefore(LocalDateTime startDateTime, LocalDateTime endDateTime);
+	
+	public List<Reservation> findAllResourceIdsByStartDateTimeAfterAndEndDateTimeBefore(LocalDateTime startDateTime, LocalDateTime endDateTime);
 	
 	@Modifying
 	@Query("update Reservation r set r.cancelled = true where r.id = :id")
-	Reservation cancel(@Param("id") int id);
+	public Reservation cancel(@Param("id") int id);
 	
 	@Modifying
 	@Query("update Reservation r set r.startTime = :startTime AND r.endTime = :endTime where r.id = :id")
-	Reservation update(@Param("startTime") LocalDateTime startDateTime, 
+	public Reservation update(@Param("startTime") LocalDateTime startDateTime, 
 			@Param("endTime") LocalDateTime endDateTime, @Param("id") int id);
 	
 }

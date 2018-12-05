@@ -22,6 +22,29 @@ public class ReservationService {
 		this.reservationRepository = reservationRepository;
 	}
 	
+	public List<Reservation> getReservationIds(LocalDateTime startDateTime, 
+			LocalDateTime endDateTime) {
+		return reservationRepository
+				.findAllResourceIdsByStartDateTimeAfterAndEndDateTimeBefore
+				(startDateTime, endDateTime);
+	}
+	
+	public Reservation saveReservation(Reservation reservation) {
+//		if (reservation.getPurpose() == null || reservation.getStartTime() == null
+//				|| reservation.getEndTime() == null || reservation.getResourceID() != 0
+//				|| reservation.getUserEmail() == null) {
+//			throw new BadRequestException();
+//		}
+		return reservationRepository.save(reservation);		
+	};
+
+	public Reservation cancelReservation(int id) {
+		return reservationRepository.cancel(id);	
+	};
+
+	public Reservation reschedule(LocalDateTime startTime, LocalDateTime endTime, int id) {
+		return reservationRepository.update(endTime, endTime, id);	
+	};
 	
 //	Example<Reservation> reservationExample = Example.of(reservation);
 	
@@ -36,12 +59,6 @@ public class ReservationService {
 //		return reservationRepository.findAll(Example.of(reservation));
 //	}
 	
-	public List<Reservation> getReservationIds(LocalDateTime startDateTime, 
-			LocalDateTime endDateTime) {
-		return reservationRepository
-				.findAllResourceIdByStartDateTimeAfterAndEndDateTimeBefore
-				(startDateTime, endDateTime);
-	}
 
 //	public Reservation getReservationByUserEmail(String email) {
 //		return reservationRepository.getByUserEmail(email);
@@ -65,20 +82,5 @@ public class ReservationService {
 //		
 //	}
 
-	public Reservation saveReservation(Reservation reservation) {
-//		if (reservation.getPurpose() == null || reservation.getStartTime() == null
-//				|| reservation.getEndTime() == null || reservation.getResourceID() != 0
-//				|| reservation.getUserEmail() == null) {
-//			throw new BadRequestException();
-//		}
-		return reservationRepository.save(reservation);		
-	};
 
-	public Reservation cancelReservation(int id) {
-		return reservationRepository.cancel(id);	
-	};
-
-	public Reservation reschedule(LocalDateTime startTime, LocalDateTime endTime, int id) {
-		return reservationRepository.update(endTime, endTime, id);	
-	};
 }

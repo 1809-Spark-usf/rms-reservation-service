@@ -5,6 +5,7 @@ import static org.mockito.Mockito.mock;
 
 import java.time.LocalDateTime;
 
+import org.aspectj.weaver.ast.Not;
 import org.junit.Test;
 import org.mockito.Mockito;
 
@@ -26,6 +27,8 @@ public class ReservationTests {
 	String userEmail;
 	boolean cancelled;
 	
+	int nonExisitingResourceId;
+	
 //	@Test(expected=NullPointerException.class)
 //	public void getReservationNoUserEmail() throws Exception {
 //		Mockito.when(mockReservationRepository.getByUserEmail(null)).thenThrow(NullPointerException.class);
@@ -45,10 +48,27 @@ public class ReservationTests {
 //	}
 //	
 //	@Test(expected=BadRequestException.class)
-//	public void getReservationsById() throws Exception {
+//	public void getReservationsByIdZero() throws Exception {
 //		Mockito.when(mockReservationRepository.getOne(0)).thenThrow(BadRequestException.class);
 //		reservationService.getReservationById(0);
 //	}
+	
+	@Test(expected=BadRequestException.class)
+	public void getReservationIdsNoStartTime() throws Exception {
+		Mockito.when(mockReservationRepository
+				.findAllResourceIdsByStartDateTimeAfterAndEndDateTimeBefore(null, endTime))
+				.thenThrow(BadRequestException.class);
+		reservationService.getReservationIds(null, endTime);
+	}
+	
+	@Test(expected=BadRequestException.class)
+	public void getReservationIdsNoEndTime() throws Exception {
+		Mockito.when(mockReservationRepository
+				.findAllResourceIdsByStartDateTimeAfterAndEndDateTimeBefore(startTime, null))
+				.thenThrow(BadRequestException.class);
+		reservationService.getReservationIds(startTime, null);
+	}
+	
 	
 	@Test(expected=BadRequestException.class)
 	public void saveReservationNoPurpose() throws Exception {
@@ -88,6 +108,47 @@ public class ReservationTests {
 				(0, purpose, startTime, endTime, resourceId, null, false, true);
 		Mockito.when(mockReservationRepository.save(badReservation)).thenThrow(BadRequestException.class);
 		reservationService.saveReservation(badReservation);
+	}
+	
+	@Test(expected=BadRequestException.class)
+	public void cancelReservationIdZero() throws Exception {
+		Mockito.when(mockReservationRepository.cancel(0)).thenThrow(BadRequestException.class);
+		reservationService.cancelReservation(0);
+		
+	}
+	
+	@Test(expected=NotFoundException.class)
+	public void cancelReservationIdNotExist() throws Exception {
+		Mockito.when(mockReservationRepository.cancel(nonExisitingResourceId)).thenThrow(NotFoundException.class);
+		reservationService.cancelReservation(0);	
+	}
+	
+	@Test(expected=BadRequestException.class)
+	public void rescheduleReservationNoStartTime() throws Exception {
+		Mockito.when(mockReservationRepository.update(null, endTime, resourceId))
+		.thenThrow(BadRequestException.class);
+		reservationService.reschedule(null, endTime, resourceId);
+	}
+	
+	@Test(expected=BadRequestException.class)
+	public void rescheduleReservationNoEndTime() throws Exception {
+		Mockito.when(mockReservationRepository.update(startTime, null, resourceId))
+		.thenThrow(BadRequestException.class);
+		reservationService.reschedule(startTime, null, resourceId);
+	}
+	
+	@Test(expected=BadRequestException.class)
+	public void rescheduleReservationIdZero() throws Exception {
+		Mockito.when(mockReservationRepository.update(startTime, endTime, 0))
+		.thenThrow(BadRequestException.class);
+		reservationService.reschedule(startTime, endTime, 0);
+	}
+	
+	@Test(expected=NotFoundException.class)
+	public void rescheduleReservationIdNotExist() throws Exception {
+		Mockito.when(mockReservationRepository.update(startTime, endTime, nonExisitingResourceId))
+		.thenThrow(NotFoundException.class);
+		reservationService.reschedule(startTime, endTime, nonExisitingResourceId);
 	}
 	
 //	@Test(expected=BadRequestException.class)
