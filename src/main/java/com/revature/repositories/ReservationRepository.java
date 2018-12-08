@@ -16,6 +16,28 @@ import com.revature.models.Reservation;
 @Repository
 public interface ReservationRepository extends JpaRepository<Reservation, Integer>, QueryByExampleExecutor<Reservation> {
 	
+	static LocalDateTime timeNow = LocalDateTime.now();
+	
+	@Query
+	public int[] findAllResourceIdsByStartTimeAfterAndEndTimeBefore(LocalDateTime startTime, LocalDateTime endTime);
+	
+	@Query("select r from Reservation r where r.startTime > :todayNow and userId = :id")
+	public List<Reservation> findAllByUserIdAndUpcoming(@Param("id") int id, 
+			@Param("todayNow") LocalDateTime timeNow);
+	
+	@Query("select r from Reservation r where r.startTime < :todayNow and userId = :id")
+	public List<Reservation> findAllByUserIdAndPast(@Param("id") int id, 
+			@Param("todayNow") LocalDateTime timeNow);
+	
+	public List<Reservation> findAllByUserId(int id);
+	
+	@Modifying
+	@Query("update Reservation r set r.cancelled = true where r.id = :id")
+	public Reservation cancel(@Param("id") int id);
+//	
+//	public Reservation update();
+
+	
 //	public List<Reservation> findAll();
 	
 //	Reservation getByUserEmail(String email);
@@ -30,15 +52,14 @@ public interface ReservationRepository extends JpaRepository<Reservation, Intege
 	
 //	Reservation[] findByUserNameOrPurposeOrStartTimeAndEndTimeOrResourceIdOrCancelledOrApproved();
 	
-	public List<Reservation> findAllResourceIdsByStartDateTimeAfterAndEndDateTimeBefore(LocalDateTime startDateTime, LocalDateTime endDateTime);
 	
-	@Modifying
-	@Query("update Reservation r set r.cancelled = true where r.id = :id")
-	public Reservation cancel(@Param("id") int id);
 	
-	@Modifying
-	@Query("update Reservation r set r.startTime = :startTime AND r.endTime = :endTime where r.id = :id")
-	public Reservation update(@Param("startTime") LocalDateTime startDateTime, 
-			@Param("endTime") LocalDateTime endDateTime, @Param("id") int id);
+	
+	
+//	@Modifying
+//	@Query("update Reservation r set r.startTime = :startTime AND r.endTime = :endTime where r.id = :id")
+//	public Reservation update(@Param("startTime") LocalDateTime startDateTime, 
+//			@Param("endTime") LocalDateTime endDateTime, @Param("id") int id);
+	
 	
 }
