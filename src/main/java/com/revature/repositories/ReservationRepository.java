@@ -19,7 +19,8 @@ public interface ReservationRepository extends JpaRepository<Reservation, Intege
 	static LocalDateTime timeNow = LocalDateTime.now();
 	
 	@Query
-	public int[] findAllResourceIdsByStartTimeAfterAndEndTimeBefore(LocalDateTime startTime, LocalDateTime endTime);
+	public int[] findAllResourceIdsByStartTimeAfterAndEndTimeBefore
+	(LocalDateTime startTime, LocalDateTime endTime);
 	
 	@Query("select r from Reservation r where r.startTime > :todayNow and userId = :id")
 	public List<Reservation> findAllByUserIdAndUpcoming(@Param("id") int id, 

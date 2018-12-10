@@ -1,11 +1,9 @@
 package com.revature.tests.services;
 
-import static org.junit.Assert.assertNull;
 import static org.mockito.Mockito.mock;
 
 import java.time.LocalDateTime;
 
-import org.aspectj.weaver.ast.Not;
 import org.junit.Test;
 import org.mockito.Mockito;
 
@@ -24,97 +22,147 @@ public class ReservationServiceTests {
 	LocalDateTime startTime;
 	LocalDateTime endTime;
 	int resourceId;
-	String userEmail;
+	int userId;
 	boolean cancelled;
-	
 	int nonExisitingResourceId;
+	int nonExistingUserId;
+	int nonExistingReservationId;
+	LocalDateTime timeNow = LocalDateTime.now();
+	boolean upcoming;
 	
-//	@Test(expected=NullPointerException.class)
-//	public void getReservationNoUserEmail() throws Exception {
-//		Mockito.when(mockReservationRepository.getByUserEmail(null)).thenThrow(NullPointerException.class);
-//		assertNull(reservationService.getReservationByUserEmail(null));
-//	}
-//	
-//	@Test(expected=NotFoundException.class)
-//	public void getReservationNoReservations() throws Exception {
-//		Mockito.when(mockReservationRepository.getByUserEmail("emailThatHasNoReservations")).thenThrow(NotFoundException.class);
-//		reservationService.getReservationByUserEmail("emailThatHasNoReservations");
-//	}
-//	
-//	@Test(expected=BadRequestException.class)
-//	public void getReservationsByDay() throws Exception {
-//		Mockito.when(mockReservationRepository.getByDay(null)).thenThrow(BadRequestException.class);
-//		reservationService.getReservationsByDay(null);
-//	}
-//	
-//	@Test(expected=BadRequestException.class)
-//	public void getReservationsByIdZero() throws Exception {
-//		Mockito.when(mockReservationRepository.getOne(0)).thenThrow(BadRequestException.class);
-//		reservationService.getReservationById(0);
-//	}
+	@Test(expected=BadRequestException.class)
+	public void getReservationsByUserIdZero() throws Exception {
+		Mockito.when(mockReservationRepository.findAllByUserId(0))
+		.thenThrow(BadRequestException.class);
+		reservationService.getReservationsByUserId(0);
+	}
 	
-//	@Test(expected=BadRequestException.class)
-//	public void getReservationIdsNoStartTime() throws Exception {
-//		Mockito.when(mockReservationRepository
-//				.findAllResourceIdsByStartDateTimeAfterAndEndDateTimeBefore(null, endTime))
-//				.thenThrow(BadRequestException.class);
-//		reservationService.getReservationIds(null, endTime);
-//	}
-//	
-//	@Test(expected=BadRequestException.class)
-//	public void getReservationIdsNoEndTime() throws Exception {
-//		Mockito.when(mockReservationRepository
-//				.findAllResourceIdsByStartDateTimeAfterAndEndDateTimeBefore(startTime, null))
-//				.thenThrow(BadRequestException.class);
-//		reservationService.getReservationIds(startTime, null);
-//	}
+	@Test(expected=NotFoundException.class)
+	public void getReservationsByUserIdNotFound() throws Exception {
+		Mockito.when(mockReservationRepository.findAllByUserId(nonExistingUserId))
+		.thenThrow(NotFoundException.class);
+		reservationService.getReservationsByUserId(0);
+	}
 	
+	@Test(expected=BadRequestException.class)
+	public void getReservationsUpcomingByUserIdZero() throws Exception {
+		Mockito.when(mockReservationRepository.findAllByUserIdAndUpcoming
+				(0, timeNow)).thenThrow(BadRequestException.class);
+		reservationService.getUpcomingReservationsByUserId(0);
+	}
 	
-//	@Test(expected=BadRequestException.class)
-//	public void saveReservationNoPurpose() throws Exception {
-//		Reservation badReservation = new Reservation
-//				(0, null, startTime, endTime, resourceId, userEmail, false, true);
-//		Mockito.when(mockReservationRepository.save(badReservation)).thenThrow(BadRequestException.class);
-//		reservationService.saveReservation(badReservation);
-//	}
-//	
-//	@Test(expected=BadRequestException.class)
-//	public void saveReservationNoStartTime() throws Exception {
-//		Reservation badReservation = new Reservation
-//				(0, purpose, null, endTime, resourceId, userEmail, false, true);
-//		Mockito.when(mockReservationRepository.save(badReservation)).thenThrow(BadRequestException.class);
-//		reservationService.saveReservation(badReservation);
-//	}
-//	
-//	@Test(expected=BadRequestException.class)
-//	public void saveReservationNoEndTime() throws Exception {
-//		Reservation badReservation = new Reservation
-//				(0, purpose, startTime, null, resourceId, userEmail, false, true);
-//		Mockito.when(mockReservationRepository.save(badReservation)).thenThrow(BadRequestException.class);
-//		reservationService.saveReservation(badReservation);
-//	}
-//	
-//	@Test(expected=BadRequestException.class)
-//	public void saveReservationNoResourceId() throws Exception {
-//		Reservation badReservation = new Reservation
-//				(0, purpose, startTime, endTime, 0, userEmail, false, true);
-//		Mockito.when(mockReservationRepository.save(badReservation)).thenThrow(BadRequestException.class);
-//		reservationService.saveReservation(badReservation);
-//	}
-//	
-//	@Test(expected=BadRequestException.class)
-//	public void saveReservationNoEmail() throws Exception {
-//		Reservation badReservation = new Reservation
-//				(0, purpose, startTime, endTime, resourceId, null, false, true);
-//		Mockito.when(mockReservationRepository.save(badReservation)).thenThrow(BadRequestException.class);
-//		reservationService.saveReservation(badReservation);
-//	}
+	@Test(expected=NotFoundException.class)
+	public void getReservationsUpcomingByUserIdNotFound() throws Exception {
+//		Mockito.when(mockReservationRepository.findAllByUserIdAndUpcoming
+//				(nonExistingUserId, timeNow)).thenThrow(NotFoundException.class);
+//		reservationService.getUpcomingReservationsByUserId(nonExistingUserId);
+	}
+	
+	@Test(expected=BadRequestException.class)
+	public void getReservationsPastByUserIdZero() throws Exception {
+//		Mockito.when(mockReservationRepository.findAllByUserIdAndPast
+//				(0, timeNow)).thenThrow(BadRequestException.class);
+//		reservationService.getPastReservationsByUserId(0);
+	}
+	
+	@Test(expected=NotFoundException.class)
+	public void getReservationsPastByUserIdNotFound() throws Exception {
+//		Mockito.when(mockReservationRepository.findAllByUserIdAndPast
+//				(nonExistingUserId, timeNow)).thenThrow(NotFoundException.class);
+//		reservationService.getPastReservationsByUserId(nonExistingUserId);
+	}
+	
+	@Test(expected=BadRequestException.class)
+	public void getReservationZeroId() throws Exception {
+		Mockito.when(mockReservationRepository.getOne(0))
+		.thenThrow(BadRequestException.class);
+		reservationService.getReservationById(0);
+	}
+	
+	@Test(expected=NotFoundException.class)
+	public void getReservationIdNotFound() throws Exception {
+		Mockito.when(mockReservationRepository.getOne
+				(nonExistingReservationId))
+		.thenThrow(NotFoundException.class);
+		reservationService.getReservationById(nonExistingReservationId);
+	}
+	
+	@Test(expected=BadRequestException.class)
+	public void getReservationResourceIdsNoStartTime() throws Exception {
+		Mockito.when(mockReservationRepository
+				.findAllResourceIdsByStartTimeAfterAndEndTimeBefore
+				(null, endTime)).thenThrow(BadRequestException.class);
+		reservationService.getReservationResourceIds(null, endTime);
+	}
+	
+	@Test(expected=BadRequestException.class)
+	public void getReservationResourceIdsNoEndTime() throws Exception {
+		Mockito.when(mockReservationRepository
+				.findAllResourceIdsByStartTimeAfterAndEndTimeBefore
+				(startTime, null)).thenThrow(BadRequestException.class);
+		reservationService.getReservationResourceIds(startTime, null);
+	}	
+	
+	@Test(expected=BadRequestException.class)
+	public void saveReservationNoPurpose() throws Exception {
+		Reservation badReservation = new Reservation
+				(0, null, startTime, endTime, null, resourceId, userId, false, true);
+		Mockito.when(mockReservationRepository.save(badReservation)).thenThrow(BadRequestException.class);
+		reservationService.saveReservation(badReservation);
+	}
+	
+	@Test(expected=BadRequestException.class)
+	public void saveReservationNoStartTime() throws Exception {
+		Reservation badReservation = new Reservation
+				(0, purpose, null, endTime, null, resourceId, userId, false, true);
+		Mockito.when(mockReservationRepository.save(badReservation)).thenThrow(BadRequestException.class);
+		reservationService.saveReservation(badReservation);
+	}
+	
+	@Test(expected=BadRequestException.class)
+	public void saveReservationNoEndTime() throws Exception {
+		Reservation badReservation = new Reservation
+				(0, purpose, startTime, null, null, resourceId, userId, false, true);
+		Mockito.when(mockReservationRepository.save(badReservation)).thenThrow(BadRequestException.class);
+		reservationService.saveReservation(badReservation);
+	}
+	
+	@Test(expected=BadRequestException.class)
+	public void saveReservationZeroResourceId() throws Exception {
+		Reservation badReservation = new Reservation
+				(0, purpose, startTime, endTime, null, 0, userId, false, true);
+		Mockito.when(mockReservationRepository.save(badReservation)).thenThrow(BadRequestException.class);
+		reservationService.saveReservation(badReservation);
+	}
+	
+	@Test(expected=BadRequestException.class)
+	public void saveReservationNotFoundResourceId() throws Exception {
+		Reservation badReservation = new Reservation
+				(0, purpose, startTime, endTime, null, nonExisitingResourceId, userId, false, true);
+		Mockito.when(mockReservationRepository.save(badReservation)).thenThrow(BadRequestException.class);
+		reservationService.saveReservation(badReservation);
+	}
+	
+	@Test(expected=BadRequestException.class)
+	public void saveReservationZeroUserId() throws Exception {
+		Reservation badReservation = new Reservation
+				(0, purpose, startTime, endTime, null, resourceId, 0, false, true);
+		Mockito.when(mockReservationRepository.save(badReservation)).thenThrow(BadRequestException.class);
+		reservationService.saveReservation(badReservation);
+	}
+	
+	@Test(expected=BadRequestException.class)
+	public void saveReservationNotFoundUserId() throws Exception {
+		Reservation badReservation = new Reservation
+				(0, purpose, startTime, endTime, null, resourceId, nonExistingUserId, false, true);
+		Mockito.when(mockReservationRepository.save(badReservation)).thenThrow(BadRequestException.class);
+		reservationService.saveReservation(badReservation);
+	}
 	
 	@Test(expected=BadRequestException.class)
 	public void cancelReservationIdZero() throws Exception {
 		Mockito.when(mockReservationRepository.cancel(0)).thenThrow(BadRequestException.class);
 		reservationService.cancelReservation(0);
-		
 	}
 	
 	@Test(expected=NotFoundException.class)
@@ -122,45 +170,5 @@ public class ReservationServiceTests {
 		Mockito.when(mockReservationRepository.cancel(nonExisitingResourceId)).thenThrow(NotFoundException.class);
 		reservationService.cancelReservation(0);	
 	}
-	
-//	@Test(expected=BadRequestException.class)
-//	public void rescheduleReservationNoStartTime() throws Exception {
-//		Mockito.when(mockReservationRepository.update(null, endTime, resourceId))
-//		.thenThrow(BadRequestException.class);
-//		reservationService.reschedule(null, endTime, resourceId);
-//	}
-//	
-//	@Test(expected=BadRequestException.class)
-//	public void rescheduleReservationNoEndTime() throws Exception {
-//		Mockito.when(mockReservationRepository.update(startTime, null, resourceId))
-//		.thenThrow(BadRequestException.class);
-//		reservationService.reschedule(startTime, null, resourceId);
-//	}
-//	
-//	@Test(expected=BadRequestException.class)
-//	public void rescheduleReservationIdZero() throws Exception {
-//		Mockito.when(mockReservationRepository.update(startTime, endTime, 0))
-//		.thenThrow(BadRequestException.class);
-//		reservationService.reschedule(startTime, endTime, 0);
-//	}
-//	
-//	@Test(expected=NotFoundException.class)
-//	public void rescheduleReservationIdNotExist() throws Exception {
-//		Mockito.when(mockReservationRepository.update(startTime, endTime, nonExisitingResourceId))
-//		.thenThrow(NotFoundException.class);
-//		reservationService.reschedule(startTime, endTime, nonExisitingResourceId);
-//	}
-	
-//	@Test(expected=BadRequestException.class)
-//	public void cancelReservationNoReservation() throws Exception {
-//		Mockito.when(reservationService.cancelReservation(null)).thenThrow(BadRequestException.class);
-//		assertNull(reservationService.cancelReservation(null));
-//	}
-//	
-//	@Test(expected=BadRequestException.class)
-//	public void rescheduleReservationNoReservation() throws Exception {
-//		Mockito.when(reservationService.reschedule(null)).thenThrow(BadRequestException.class);
-//		assertNull(reservationService.reschedule(null));
-//	}
-//	
+		
 }

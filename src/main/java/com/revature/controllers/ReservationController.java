@@ -7,6 +7,7 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -19,7 +20,7 @@ import com.revature.purposeEnum.Purpose;
 import com.revature.services.ReservationService;
 
 @RestController
-@RequestMapping("reservation")
+@RequestMapping("reservations")
 public class ReservationController {
 	
 	ReservationService reservationService;
@@ -48,7 +49,21 @@ public class ReservationController {
 	@GetMapping("users")
 	public List<Reservation> getReservationsByUserUpcoming(@RequestParam int id,
 			@RequestParam boolean upcoming) {
-		List<Reservation> userList = reservationService.getReservationByUserId(id, upcoming);
+		if (upcoming) {
+			List<Reservation> userList = reservationService.getUpcomingReservationsByUserId(id);
+			for (Reservation reservation: userList) {
+				reservation.setResource(resourceClient.getResourceById(reservation.getResourceID()));
+			}
+			return userList;
+			
+		} else if (upcoming == false) {
+			List<Reservation> userList = reservationService.getPastReservationsByUserId(id);
+			for (Reservation reservation: userList) {
+				reservation.setResource(resourceClient.getResourceById(reservation.getResourceID()));
+			}
+			return userList;
+		}
+		List<Reservation> userList = reservationService.getReservationsByUserId(id);
 		for (Reservation reservation: userList) {
 			reservation.setResource(resourceClient.getResourceById(reservation.getResourceID()));
 		}
@@ -71,12 +86,11 @@ public class ReservationController {
 		return reservationService.getReservationByCriteria(reservation);
 	}
 	
-	@GetMapping("between")
+	@GetMapping("available")
 	public int[] getReservations(@RequestParam LocalDateTime startTime,
 			@RequestParam LocalDateTime endTime) {
 		return reservationService.getReservationResourceIds(endTime, endTime);
 	}
-	
 	
 	@GetMapping("resources")
 	public List<Resource> getAvailableResources(
@@ -98,6 +112,11 @@ public class ReservationController {
 				}
 			}
 			return resources;
+	}
+	
+	@PostMapping("")
+	public Reservation saveReservation(@RequestParam Reservation reservation) {
+		return reservationService.saveReservation(reservation);
 	}
 	
 	@PutMapping("cancel")

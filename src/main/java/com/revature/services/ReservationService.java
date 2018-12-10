@@ -24,15 +24,17 @@ public class ReservationService {
 		this.reservationRepository = reservationRepository;
 	}
 	
-	public List<Reservation> getReservationByUserId(int id, boolean upcoming) {
-		if (upcoming) {
-			return reservationRepository.findAllByUserIdAndUpcoming(id, timeNow);
-		} else if (upcoming == false){
-			return reservationRepository.findAllByUserIdAndPast(id, timeNow); 
-		}
-		return reservationRepository.findAllByUserId(id);
-		
+	public List<Reservation> getReservationsByUserId(int id) {
+		return reservationRepository.findAllByUserId(id);	
 	};
+	
+	public List<Reservation> getUpcomingReservationsByUserId(int id) {
+		return reservationRepository.findAllByUserIdAndUpcoming(id, timeNow);
+	}
+	
+	public List<Reservation> getPastReservationsByUserId(int id) {
+		return reservationRepository.findAllByUserIdAndPast(id, timeNow); 
+	}
 	
 	public Reservation getReservationById(int id) {
 		return reservationRepository.getOne(id);
