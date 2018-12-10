@@ -8,8 +8,14 @@ addons:
 
 jobs:
   include:
+    - stage: pre-build
+      script: mvn clean
+  
     - stage: test
-      script: mvn test
+      script: mvn test org.jacoco:jacoco-maven-plugin:prepare-agent
     
-    - stage: build-quality
-      script: mvn clean org.jacoco:jacoco-maven-plugin:prepare-agent package sonar:sonar
+    - stage: build
+      script: mvn package
+      
+    - stage: quality
+      script: mvn sonar:sonar
