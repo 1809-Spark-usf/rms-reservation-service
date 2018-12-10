@@ -9,21 +9,24 @@ import org.springframework.web.bind.annotation.PathVariable;
 
 import com.revature.models.Resource;
 
-@FeignClient("resources")
+@FeignClient(name="resources")
 @Component
 public interface ResourceClient {
 	
-	@GetMapping("{id}")
-	public Resource getResourceById(@PathVariable int id);
-	
 	@GetMapping("")
-	public List<Resource> getResourcesById();
+//	@RequestLine("GET")
+	public List<Resource> findResources();
 	
-	@GetMapping("{id}")
-	public List<Resource> getResourcesById(@PathVariable int[] ids);
+	@GetMapping("/{id}")
+//	@RequestLine("GET /{id}")
+	public Resource getResources(@PathVariable int[] id);
+	
+	@GetMapping("/building/{id}")
+//	@RequestLine("GET /building/{id}")
+	public List<Resource> getByBuildingId(@PathVariable int id);
 		
-	@GetMapping("/campuses/{id}")
-	public List<Resource> getResourcesByCampus(@PathVariable int id);
-	
+	@GetMapping("/campus/{id}")
+//	@RequestLine("GET /campus/{id}")
+	public List<Resource> getByCampus(@PathVariable int id);
 	
 }

@@ -32,14 +32,14 @@ public class ReservationServiceTests {
 	
 	@Test(expected=BadRequestException.class)
 	public void getReservationsByUserIdZero() throws Exception {
-		Mockito.when(mockReservationRepository.findAllByUserId(0))
+		Mockito.when(mockReservationRepository.findByUserId(0))
 		.thenThrow(BadRequestException.class);
 		reservationService.getReservationsByUserId(0);
 	}
 	
 	@Test(expected=NotFoundException.class)
 	public void getReservationsByUserIdNotFound() throws Exception {
-		Mockito.when(mockReservationRepository.findAllByUserId(nonExistingUserId))
+		Mockito.when(mockReservationRepository.findByUserId(nonExistingUserId))
 		.thenThrow(NotFoundException.class);
 		reservationService.getReservationsByUserId(0);
 	}

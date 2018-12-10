@@ -92,6 +92,15 @@
 			<scope>test</scope>
 		</dependency>
 
+		<!-- https://mvnrepository.com/artifact/org.springframework.cloud/spring-cloud-starter-feign -->
+		<dependency>
+			<groupId>org.springframework.cloud</groupId>
+			<artifactId>spring-cloud-starter-feign</artifactId>
+			<version>1.4.6.RELEASE</version>
+		</dependency>
+
+
+
 
 
 		<!-- https://mvnrepository.com/artifact/org.mockito/mockito-all -->

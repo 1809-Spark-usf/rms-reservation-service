@@ -7,7 +7,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Example;
 import org.springframework.stereotype.Service;
 
-import com.revature.enumerations.Purpose;
 import com.revature.models.Reservation;
 import com.revature.repositories.ReservationRepository;
 
@@ -25,7 +24,7 @@ public class ReservationService {
 	}
 	
 	public List<Reservation> getReservationsByUserId(int id) {
-		return reservationRepository.findAllByUserId(id);	
+		return reservationRepository.findByUserId(id);	
 	};
 	
 	public List<Reservation> getUpcomingReservationsByUserId(int id) {
@@ -37,7 +36,7 @@ public class ReservationService {
 	}
 	
 	public Reservation getReservationById(int id) {
-		return reservationRepository.getOne(id);
+		return reservationRepository.findById(id);
 	}
 	
 	public int[] getReservationResourceIds(LocalDateTime startDateTime, 

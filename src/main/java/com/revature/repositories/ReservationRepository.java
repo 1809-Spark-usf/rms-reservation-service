@@ -30,7 +30,9 @@ public interface ReservationRepository extends JpaRepository<Reservation, Intege
 	public List<Reservation> findAllByUserIdAndPast(@Param("id") int id, 
 			@Param("todayNow") LocalDateTime timeNow);
 	
-	public List<Reservation> findAllByUserId(int id);
+	public List<Reservation> findByUserId(int id);
+	
+	public Reservation findById(int id);
 	
 	@Modifying
 	@Query("update Reservation r set r.cancelled = true where r.id = :id")

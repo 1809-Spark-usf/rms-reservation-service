@@ -45,7 +45,7 @@ public class ReservationControllerTests {
 	
 	@Before public void
 	given_rest_assured_is_configured_with_reservation_controller() {
-		RestAssuredMockMvc.standaloneSetup(new ReservationController(mockReservationService));
+		RestAssuredMockMvc.standaloneSetup(new ReservationController(mockReservationService, null));
 	}
 
 //	@After

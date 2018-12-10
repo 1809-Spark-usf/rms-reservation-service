@@ -1,7 +1,6 @@
 package com.revature.controllers;
 
 import java.time.LocalDateTime;
-import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -9,6 +8,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
@@ -21,18 +21,19 @@ import com.revature.models.Resource;
 import com.revature.services.ReservationService;
 
 @RestController
-@RequestMapping("reservations")
+@RequestMapping("")
 public class ReservationController {
 	
 	ReservationService reservationService;
 	ResourceClient resourceClient;
 	
 	@Autowired
-	public ReservationController(ReservationService reservationService) {
+	public ReservationController(ReservationService reservationService,
+			ResourceClient resourceClient) {
 		super();
 		this.reservationService = reservationService;
+		this.resourceClient = resourceClient;
 	}
-	
 	
 //	@GetMapping("")
 //	public List<Reservation> getReservations(@RequestParam int id,
@@ -42,37 +43,36 @@ public class ReservationController {
 //				userEmail, cancelled, approved);
 //	}
 	
+	@GetMapping("/feign")
+	public List<Resource> getAllR() {
+		return resourceClient.findResources();
+	}
+	
 	@GetMapping("")
 	public List<Reservation> getAll() {
 		return reservationService.getAll();
 	}
 	
 	@GetMapping("users")
-	public List<Reservation> getReservationsByUserUpcoming(@RequestParam int id,
-			@RequestParam boolean upcoming) {
+	public List<Reservation> getReservationsByUser(@RequestParam int id,
+			@RequestParam(required=false) boolean upcoming) {
 		if (upcoming) {
 			List<Reservation> userList = reservationService.getUpcomingReservationsByUserId(id);
-			for (Reservation reservation: userList) {
-				reservation.setResource(resourceClient.getResourceById(reservation.getResourceID()));
-			}
+//			for (Reservation reservation: userList) {
+//				reservation.setResource(resourceClient.getResourceById(reservation.getresourceId()));
+//			}
 			return userList;
 			
-		} else if (upcoming == false) {
-			List<Reservation> userList = reservationService.getPastReservationsByUserId(id);
-			for (Reservation reservation: userList) {
-				reservation.setResource(resourceClient.getResourceById(reservation.getResourceID()));
-			}
-			return userList;
 		}
 		List<Reservation> userList = reservationService.getReservationsByUserId(id);
-		for (Reservation reservation: userList) {
-			reservation.setResource(resourceClient.getResourceById(reservation.getResourceID()));
-		}
+//		for (Reservation reservation: userList) {
+//			reservation.setResource(resourceClient.getResourceById(reservation.getresourceId()));
+//		}
 		return userList;
 	}
 	
-	@GetMapping("{id}")
-	public Reservation getReservationById(@PathVariable int id) {
+	@GetMapping("id")
+	public Reservation getReservationById(@RequestParam int id) {
 		return reservationService.getReservationById(id);
 	}
 	
@@ -93,15 +93,15 @@ public class ReservationController {
 		return reservationService.getReservationResourceIds(endTime, endTime);
 	}
 	
-	@GetMapping("resources")
+	@GetMapping("resource")
 	public List<Resource> getAvailableResources(
-			@RequestParam String location,
+			@RequestParam(required=false) String location,
 			@RequestParam LocalDateTime startDateTime,
 			@RequestParam LocalDateTime endDateTime,
 			@RequestParam Purpose purpose) {
 			
 		
-			List<Resource> resources = resourceClient.getResourcesById();
+			List<Resource> resources = resourceClient.findResources();
 			int[] checkList = reservationService.getReservationResourceIds
 					(startDateTime, endDateTime);
 			
@@ -123,7 +123,7 @@ public class ReservationController {
 	}
 	
 	@PostMapping("")
-	public Reservation saveReservation(@RequestParam Reservation reservation) {
+	public Reservation saveReservation(@RequestBody Reservation reservation) {
 		return reservationService.saveReservation(reservation);
 	}
 	
@@ -131,7 +131,5 @@ public class ReservationController {
 	public void cancelReservation(@RequestParam int id) {
 		reservationService.cancelReservation(id);
 	}
-	
-
 	
 }

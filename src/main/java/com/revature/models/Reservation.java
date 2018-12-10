@@ -20,7 +20,6 @@ public class Reservation {
 	@GeneratedValue(strategy=GenerationType.IDENTITY)
 	private int id;
 	
-	
 	@NotNull
 	private Purpose purpose;
 	private LocalDateTime startTime;
@@ -29,10 +28,11 @@ public class Reservation {
 	@Transient
 	private Resource resource;
 	
-	private int resourceID;
+	private int resourceId;
 	private int userId;
 	private boolean cancelled;
 	private boolean approved;
+	
 	public int getId() {
 		return id;
 	}
@@ -63,11 +63,11 @@ public class Reservation {
 	public void setResource(Resource resource) {
 		this.resource = resource;
 	}
-	public int getResourceID() {
-		return resourceID;
+	public int getresourceId() {
+		return resourceId;
 	}
-	public void setResourceID(int resourceID) {
-		this.resourceID = resourceID;
+	public void setresourceId(int resourceId) {
+		this.resourceId = resourceId;
 	}
 	public int getUserId() {
 		return userId;
@@ -92,14 +92,14 @@ public class Reservation {
 		// TODO Auto-generated constructor stub
 	}
 	public Reservation(int id, @NotNull Purpose purpose, LocalDateTime startTime, LocalDateTime endTime,
-			Resource resource, int resourceID, int userId, boolean cancelled, boolean approved) {
+			Resource resource, int resourceId, int userId, boolean cancelled, boolean approved) {
 		super();
 		this.id = id;
 		this.purpose = purpose;
 		this.startTime = startTime;
 		this.endTime = endTime;
 		this.resource = resource;
-		this.resourceID = resourceID;
+		this.resourceId = resourceId;
 		this.userId = userId;
 		this.cancelled = cancelled;
 		this.approved = approved;
@@ -114,7 +114,7 @@ public class Reservation {
 		result = prime * result + id;
 		result = prime * result + ((purpose == null) ? 0 : purpose.hashCode());
 		result = prime * result + ((resource == null) ? 0 : resource.hashCode());
-		result = prime * result + resourceID;
+		result = prime * result + resourceId;
 		result = prime * result + ((startTime == null) ? 0 : startTime.hashCode());
 		result = prime * result + userId;
 		return result;
@@ -146,7 +146,7 @@ public class Reservation {
 				return false;
 		} else if (!resource.equals(other.resource))
 			return false;
-		if (resourceID != other.resourceID)
+		if (resourceId != other.resourceId)
 			return false;
 		if (startTime == null) {
 			if (other.startTime != null)
@@ -160,7 +160,7 @@ public class Reservation {
 	@Override
 	public String toString() {
 		return "Reservation [id=" + id + ", purpose=" + purpose + ", startTime=" + startTime + ", endTime=" + endTime
-				+ ", resource=" + resource + ", resourceID=" + resourceID + ", userId=" + userId + ", cancelled="
+				+ ", resource=" + resource + ", resourceId=" + resourceId + ", userId=" + userId + ", cancelled="
 				+ cancelled + ", approved=" + approved + "]";
 	}
 	
