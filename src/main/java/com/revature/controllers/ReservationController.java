@@ -13,10 +13,11 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.revature.enumerations.Purpose;
+import com.revature.enumerations.Type;
 import com.revature.feign.ResourceClient;
 import com.revature.models.Reservation;
 import com.revature.models.Resource;
-import com.revature.purposeEnum.Purpose;
 import com.revature.services.ReservationService;
 
 @RestController
@@ -99,14 +100,21 @@ public class ReservationController {
 			@RequestParam LocalDateTime endDateTime,
 			@RequestParam Purpose purpose) {
 			
-		// Feign Client send query for resources at location
-			List<Resource> resources = new ArrayList<>();
+		
+			List<Resource> resources = resourceClient.getResourcesById();
 			int[] checkList = reservationService.getReservationResourceIds
 					(startDateTime, endDateTime);
 			
 			for (int resourceId: checkList) {
 				for (Resource resource: resources) {
 					if (resource.getId() == resourceId) {
+						resources.remove(resource);
+					}
+				}
+			}
+			if (purpose == Purpose.PANEL) {
+				for (Resource resource: resources) {
+					if (resource.getType() == Type.OFFICE) {
 						resources.remove(resource);
 					}
 				}

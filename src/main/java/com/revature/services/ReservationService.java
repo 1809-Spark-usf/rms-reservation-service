@@ -7,8 +7,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Example;
 import org.springframework.stereotype.Service;
 
+import com.revature.enumerations.Purpose;
 import com.revature.models.Reservation;
-import com.revature.purposeEnum.Purpose;
 import com.revature.repositories.ReservationRepository;
 
 @Service

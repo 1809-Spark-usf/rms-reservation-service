@@ -16,6 +16,9 @@ public interface ResourceClient {
 	@GetMapping("{id}")
 	public Resource getResourceById(@PathVariable int id);
 	
+	@GetMapping("")
+	public List<Resource> getResourcesById();
+	
 	@GetMapping("{id}")
 	public List<Resource> getResourcesById(@PathVariable int[] ids);
 		

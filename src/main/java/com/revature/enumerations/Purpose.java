@@ -1,4 +1,4 @@
-package com.revature.purposeEnum;
+package com.revature.enumerations;
 
 public enum Purpose {
 

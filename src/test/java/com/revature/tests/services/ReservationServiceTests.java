@@ -7,10 +7,10 @@ import java.time.LocalDateTime;
 import org.junit.Test;
 import org.mockito.Mockito;
 
+import com.revature.enumerations.Purpose;
 import com.revature.exceptions.BadRequestException;
 import com.revature.exceptions.NotFoundException;
 import com.revature.models.Reservation;
-import com.revature.purposeEnum.Purpose;
 import com.revature.repositories.ReservationRepository;
 import com.revature.services.ReservationService;
 
