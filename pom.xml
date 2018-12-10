@@ -5,6 +5,7 @@
 	<groupId>com.revature.rms</groupId>
 	<artifactId>RMSReservationService</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
+	
 	<parent>
 		<groupId>org.springframework.boot</groupId>
 		<artifactId>spring-boot-starter-parent</artifactId>
@@ -132,6 +133,7 @@
 				<artifactId>jacoco-maven-plugin</artifactId>
 				<version>0.8.2</version>
 			</plugin>
+
 		</plugins>
 	</build>
 </project>
