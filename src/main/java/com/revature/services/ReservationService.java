@@ -23,15 +23,15 @@ public class ReservationService {
 		this.reservationRepository = reservationRepository;
 	}
 	
-	public List<Reservation> getReservationsByUserId(int id) {
+	public List<Reservation> getReservationsByUserId(String id) {
 		return reservationRepository.findByUserId(id);	
 	};
 	
-	public List<Reservation> getUpcomingReservationsByUserId(int id) {
+	public List<Reservation> getUpcomingReservationsByUserId(String id) {
 		return reservationRepository.findAllByUserIdAndUpcoming(id, timeNow);
 	}
 	
-	public List<Reservation> getPastReservationsByUserId(int id) {
+	public List<Reservation> getPastReservationsByUserId(String id) {
 		return reservationRepository.findAllByUserIdAndPast(id, timeNow); 
 	}
 	

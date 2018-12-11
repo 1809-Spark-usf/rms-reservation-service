@@ -9,6 +9,8 @@ import org.springframework.web.bind.annotation.PathVariable;
 
 import com.revature.models.Resource;
 
+
+
 @FeignClient(name="resources")
 @Component
 public interface ResourceClient {

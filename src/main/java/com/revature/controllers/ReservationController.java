@@ -54,7 +54,7 @@ public class ReservationController {
 	}
 	
 	@GetMapping("users")
-	public List<Reservation> getReservationsByUser(@RequestParam int id,
+	public List<Reservation> getReservationsByUser(@RequestParam String id,
 			@RequestParam(required=false) boolean upcoming) {
 		if (upcoming) {
 			List<Reservation> userList = reservationService.getUpcomingReservationsByUserId(id);

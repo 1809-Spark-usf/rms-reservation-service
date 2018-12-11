@@ -23,14 +23,14 @@ public interface ReservationRepository extends JpaRepository<Reservation, Intege
 	(LocalDateTime startTime, LocalDateTime endTime);
 	
 	@Query("select r from Reservation r where r.startTime > :todayNow and userId = :id")
-	public List<Reservation> findAllByUserIdAndUpcoming(@Param("id") int id, 
+	public List<Reservation> findAllByUserIdAndUpcoming(@Param("id") String id, 
 			@Param("todayNow") LocalDateTime timeNow);
 	
 	@Query("select r from Reservation r where r.startTime < :todayNow and userId = :id")
-	public List<Reservation> findAllByUserIdAndPast(@Param("id") int id, 
+	public List<Reservation> findAllByUserIdAndPast(@Param("id") String id, 
 			@Param("todayNow") LocalDateTime timeNow);
 	
-	public List<Reservation> findByUserId(int id);
+	public List<Reservation> findByUserId(String id);
 	
 	public Reservation findById(int id);
 	
