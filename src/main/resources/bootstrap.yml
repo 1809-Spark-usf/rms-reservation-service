@@ -1,0 +1,6 @@
+spring:
+  application:
+    name: reservations
+  
+  profiles:
+    active: ${RMS_APP_PROFILE:local}  
