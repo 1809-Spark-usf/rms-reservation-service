@@ -4,14 +4,17 @@ import java.time.LocalDateTime;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.ParameterizedTypeReference;
+import org.springframework.http.HttpMethod;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.client.RestTemplate;
 
 import com.revature.enumerations.Purpose;
 import com.revature.enumerations.Type;
@@ -44,8 +47,35 @@ public class ReservationController {
 //	}
 	
 	@GetMapping("/feign")
-	public List<Resource> getAllR() {
-		return resourceClient.findResources();
+	public void getAllR() {
+//		return resourceClient.findResources();
+		getResources();
+	}
+	
+	private List<Resource> getResources() {
+	    final String uri = "http://localhost:4000/";
+	     
+	    RestTemplate restTemplate = new RestTemplate();
+	    ResponseEntity<List<Resource>> response = restTemplate.exchange(
+	      uri,
+	      HttpMethod.GET,
+	      null,
+	      new ParameterizedTypeReference<List<Resource>>(){});
+	    List<Resource> resources = response.getBody();
+	    System.out.println(resources);
+	    return resources;
+	}
+	
+	private Resource getResourceById(int id) {
+
+		String uri = "http://localhost:4000/";
+		String idUri = Integer.toString(id);
+		String requestUri = uri + idUri;
+
+		RestTemplate restTemplate = new RestTemplate();
+		Resource[] result = restTemplate.getForObject(requestUri, Resource[].class);
+		return result[0];
+
 	}
 	
 	@GetMapping("")
@@ -58,16 +88,16 @@ public class ReservationController {
 			@RequestParam(required=false) boolean upcoming) {
 		if (upcoming) {
 			List<Reservation> userList = reservationService.getUpcomingReservationsByUserId(id);
-//			for (Reservation reservation: userList) {
-//				reservation.setResource(resourceClient.getResourceById(reservation.getresourceId()));
-//			}
+			for (Reservation reservation: userList) {
+				reservation.setResource(getResourceById(reservation.getResourceId()));
+			}
 			return userList;
 			
 		}
 		List<Reservation> userList = reservationService.getReservationsByUserId(id);
-//		for (Reservation reservation: userList) {
-//			reservation.setResource(resourceClient.getResourceById(reservation.getresourceId()));
-//		}
+		for (Reservation reservation: userList) {
+			reservation.setResource(getResourceById(reservation.getResourceId()));
+		}
 		return userList;
 	}
 	
@@ -101,7 +131,7 @@ public class ReservationController {
 			@RequestParam Purpose purpose) {
 			
 		
-			List<Resource> resources = resourceClient.findResources();
+			List<Resource> resources = getResources();
 			int[] checkList = reservationService.getReservationResourceIds
 					(startDateTime, endDateTime);
 			
