@@ -17,9 +17,9 @@ import com.revature.models.Reservation;
 public interface ReservationRepository extends JpaRepository<Reservation, Integer>, QueryByExampleExecutor<Reservation> {
 	
 	static LocalDateTime timeNow = LocalDateTime.now();
-	
-	@Query
-	public int[] findAllResourceIdsByStartTimeAfterAndEndTimeBefore
+
+	@Query(value = "SELECT resource_Id FROM reservations WHERE start_time >= ?1 AND end_time <= ?2", nativeQuery = true)
+	public List<Integer> findResourceIdsByStartTimeAfterAndEndTimeBefore
 	(LocalDateTime startTime, LocalDateTime endTime);
 	
 	@Query("select r from Reservation r where r.startTime > :todayNow and userId = :id")

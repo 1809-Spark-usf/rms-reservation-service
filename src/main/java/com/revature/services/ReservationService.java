@@ -39,10 +39,10 @@ public class ReservationService {
 		return reservationRepository.findById(id);
 	}
 	
-	public int[] getReservationResourceIds(LocalDateTime startDateTime, 
+	public List<Integer> getReservationResourceIds(LocalDateTime startDateTime, 
 			LocalDateTime endDateTime) {
 		return reservationRepository
-				.findAllResourceIdsByStartTimeAfterAndEndTimeBefore
+				.findResourceIdsByStartTimeAfterAndEndTimeBefore
 				(startDateTime, endDateTime);
 	}
 	public Reservation saveReservation(Reservation reservation) {

@@ -90,7 +90,7 @@ public class ReservationServiceTests {
 	@Test(expected=BadRequestException.class)
 	public void getReservationResourceIdsNoStartTime() throws Exception {
 		Mockito.when(mockReservationRepository
-				.findAllResourceIdsByStartTimeAfterAndEndTimeBefore
+				.findResourceIdsByStartTimeAfterAndEndTimeBefore
 				(null, endTime)).thenThrow(BadRequestException.class);
 		reservationService.getReservationResourceIds(null, endTime);
 	}
@@ -98,7 +98,7 @@ public class ReservationServiceTests {
 	@Test(expected=BadRequestException.class)
 	public void getReservationResourceIdsNoEndTime() throws Exception {
 		Mockito.when(mockReservationRepository
-				.findAllResourceIdsByStartTimeAfterAndEndTimeBefore
+				.findResourceIdsByStartTimeAfterAndEndTimeBefore
 				(startTime, null)).thenThrow(BadRequestException.class);
 		reservationService.getReservationResourceIds(startTime, null);
 	}	

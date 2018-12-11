@@ -118,36 +118,37 @@ public class ReservationController {
 	}
 	
 	@GetMapping("available")
-	public int[] getReservations(@RequestParam LocalDateTime startTime,
+	public List<Integer> getReservations(@RequestParam LocalDateTime startTime,
 			@RequestParam LocalDateTime endTime) {
 		return reservationService.getReservationResourceIds(endTime, endTime);
+	}
+	
+	@GetMapping("test")
+	public List<Integer> getResourceIds(@RequestParam String startDateTime,
+			@RequestParam String endDateTime) {
+		return reservationService.getReservationResourceIds
+				(LocalDateTime.parse(startDateTime), 
+						LocalDateTime.parse(endDateTime));
 	}
 	
 	@GetMapping("resource")
 	public List<Resource> getAvailableResources(
 			@RequestParam(required=false) String location,
-			@RequestParam LocalDateTime startDateTime,
-			@RequestParam LocalDateTime endDateTime,
+			@RequestParam String startDateTime,
+			@RequestParam String endDateTime,
 			@RequestParam Purpose purpose) {
 			
 		
 			List<Resource> resources = getResources();
-			int[] checkList = reservationService.getReservationResourceIds
-					(startDateTime, endDateTime);
+			List<Integer> checkList = reservationService.getReservationResourceIds
+					(LocalDateTime.parse(startDateTime), 
+							LocalDateTime.parse(endDateTime));
 			
 			for (int resourceId: checkList) {
-				for (Resource resource: resources) {
-					if (resource.getId() == resourceId) {
-						resources.remove(resource);
-					}
-				}
+				resources.removeIf(r -> r.getId() == resourceId);
 			}
 			if (purpose == Purpose.PANEL) {
-				for (Resource resource: resources) {
-					if (resource.getType() == Type.OFFICE) {
-						resources.remove(resource);
-					}
-				}
+				resources.removeIf(r -> r.getType() == Type.OFFICE);
 			}
 			return resources;
 	}
