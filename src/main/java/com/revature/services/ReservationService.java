@@ -46,11 +46,6 @@ public class ReservationService {
 				(startDateTime, endDateTime);
 	}
 	public Reservation saveReservation(Reservation reservation) {
-//		if (reservation.getPurpose() == null || reservation.getStartTime() == null
-//				|| reservation.getEndTime() == null || reservation.getResourceID() != 0
-//				|| reservation.getUserEmail() == null) {
-//			throw new BadRequestException();
-//		}
 		return reservationRepository.save(reservation);		
 	};
 
@@ -59,41 +54,12 @@ public class ReservationService {
 	};
 
 	
-	public List<Reservation> getReservationByCriteria(Reservation reservation) {
-		return reservationRepository.findAll(Example.of(reservation));
-	}
-
-	public List<Reservation> getAll() {
-		// TODO Auto-generated method stub
-		return reservationRepository.findAll();
-	}
-
-	
-	
-	
-
-	
-
-//	public Reservation reschedule(LocalDateTime startTime, LocalDateTime endTime, int id) {
-//		return reservationRepository.update(startTime, endTime, id);	
-//	};
-
-//	public Reservation getReservationById(int id) {
-//		return reservationRepository.getOne(id);
+//	public List<Reservation> getReservationByCriteria(Reservation reservation) {
+//		return reservationRepository.findAll(Example.of(reservation));
 //	}
 //
-//	public Reservation[] getAllReservations() {
-//		return reservationRepository.getAll();
-//	};
-//
-//	public Reservation[] getReservationsByDay(LocalDateTime localDateTime) {
-//		return reservationRepository.getByDay(localDateTime);
-//	};
-	
-//	public Reservation[] getReservationsByQuery(String userEmail, Purpose purpose, 
-//			LocalDateTime startTime, LocalDateTime endTime, int resourceId, boolean cancelled, boolean approved) {
-//		return reservationRepository.findByUserNameOrPurposeOrStartTimeAndEndTimeOrResourceIdOrCancelledOrApproved();
-//		
+//	public List<Reservation> getAll() {
+//		return reservationRepository.findAll();
 //	}
 
 

@@ -37,32 +37,7 @@ public interface ReservationRepository extends JpaRepository<Reservation, Intege
 	@Modifying
 	@Query("update Reservation r set r.cancelled = true where r.id = :id")
 	public Reservation cancel(@Param("id") int id);
-//	
-//	public Reservation update();
-
 	
 //	public List<Reservation> findAll();
-	
-//	Reservation getByUserEmail(String email);
-	
-//	Reservation[] getAll();
-	
-//	List<Reservation> findAll();
-//
-//	Reservation[] getByDay(LocalDateTime localDateTime);
-	
-//	Reservation(;
-	
-//	Reservation[] findByUserNameOrPurposeOrStartTimeAndEndTimeOrResourceIdOrCancelledOrApproved();
-	
-	
-	
-	
-	
-//	@Modifying
-//	@Query("update Reservation r set r.startTime = :startTime AND r.endTime = :endTime where r.id = :id")
-//	public Reservation update(@Param("startTime") LocalDateTime startDateTime, 
-//			@Param("endTime") LocalDateTime endDateTime, @Param("id") int id);
-	
-	
+
 }
