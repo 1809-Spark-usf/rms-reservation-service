@@ -28,11 +28,11 @@ public class ReservationService {
 	};
 	
 	public List<Reservation> getUpcomingReservationsByUserId(String id) {
-		return reservationRepository.findAllByUserIdAndUpcoming(id, timeNow);
+		return reservationRepository.findAllByUserIdAndUpcoming(id, LocalDateTime.now());
 	}
 	
 	public List<Reservation> getPastReservationsByUserId(String id) {
-		return reservationRepository.findAllByUserIdAndPast(id, timeNow); 
+		return reservationRepository.findAllByUserIdAndPast(id, LocalDateTime.now()); 
 	}
 	
 	public Reservation getReservationById(int id) {

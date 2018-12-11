@@ -44,47 +44,11 @@ public class ReservationServiceTests {
 		reservationService.getReservationsByUserId(nonExistingUserId);
 	}
 	
-	@Test(expected=BadRequestException.class)
-	public void getReservationsUpcomingByUserIdNull() throws Exception {
-		Mockito.when(mockReservationRepository.findAllByUserIdAndUpcoming
-				(null, timeNow)).thenThrow(BadRequestException.class);
-		reservationService.getUpcomingReservationsByUserId(null);
-	}
-	
-	@Test(expected=NotFoundException.class)
-	public void getReservationsUpcomingByUserIdNotFound() throws Exception {
-//		Mockito.when(mockReservationRepository.findAllByUserIdAndUpcoming
-//				(nonExistingUserId, timeNow)).thenThrow(NotFoundException.class);
-//		reservationService.getUpcomingReservationsByUserId(nonExistingUserId);
-	}
-	
-	@Test(expected=BadRequestException.class)
-	public void getReservationsPastByUserIdZero() throws Exception {
-//		Mockito.when(mockReservationRepository.findAllByUserIdAndPast
-//				(0, timeNow)).thenThrow(BadRequestException.class);
-//		reservationService.getPastReservationsByUserId(0);
-	}
-	
 	@Test(expected=NotFoundException.class)
 	public void getReservationsPastByUserIdNotFound() throws Exception {
-//		Mockito.when(mockReservationRepository.findAllByUserIdAndPast
-//				(nonExistingUserId, timeNow)).thenThrow(NotFoundException.class);
-//		reservationService.getPastReservationsByUserId(nonExistingUserId);
-	}
-	
-	@Test(expected=BadRequestException.class)
-	public void getReservationZeroId() throws Exception {
-		Mockito.when(mockReservationRepository.getOne(0))
-		.thenThrow(BadRequestException.class);
-		reservationService.getReservationById(0);
-	}
-	
-	@Test(expected=NotFoundException.class)
-	public void getReservationIdNotFound() throws Exception {
-		Mockito.when(mockReservationRepository.getOne
-				(nonExistingReservationId))
-		.thenThrow(NotFoundException.class);
-		reservationService.getReservationById(nonExistingReservationId);
+		Mockito.when(mockReservationRepository.findAllByUserIdAndPast
+				(nonExistingUserId, timeNow)).thenThrow(NotFoundException.class);
+		reservationService.getPastReservationsByUserId(nonExistingUserId);
 	}
 	
 	@Test(expected=BadRequestException.class)
