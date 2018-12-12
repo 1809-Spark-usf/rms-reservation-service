@@ -13,86 +13,105 @@ import javax.validation.constraints.NotNull;
 import com.revature.enumerations.Purpose;
 
 @Entity
-@Table(name="reservations")
+@Table(name = "reservations")
 public class Reservation {
-	
+
 	@Id
-	@GeneratedValue(strategy=GenerationType.IDENTITY)
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private int id;
-	
+
 	@NotNull
 	private Purpose purpose;
 	private LocalDateTime startTime;
 	private LocalDateTime endTime;
-	
+
 	@Transient
 	private Resource resource;
-	
+
 	private int resourceId;
-	private int userId;
+	private String userId;
 	private boolean cancelled;
 	private boolean approved;
-	
+
 	public int getId() {
 		return id;
 	}
+
 	public void setId(int id) {
 		this.id = id;
 	}
+
 	public Purpose getPurpose() {
 		return purpose;
 	}
+
 	public void setPurpose(Purpose purpose) {
 		this.purpose = purpose;
 	}
+
 	public LocalDateTime getStartTime() {
 		return startTime;
 	}
+
 	public void setStartTime(LocalDateTime startTime) {
 		this.startTime = startTime;
 	}
+
 	public LocalDateTime getEndTime() {
 		return endTime;
 	}
+
 	public void setEndTime(LocalDateTime endTime) {
 		this.endTime = endTime;
 	}
+
 	public Resource getResource() {
 		return resource;
 	}
+
 	public void setResource(Resource resource) {
 		this.resource = resource;
 	}
-	public int getresourceId() {
+
+	public int getResourceId() {
 		return resourceId;
 	}
-	public void setresourceId(int resourceId) {
+
+	public void setResourceId(int resourceId) {
 		this.resourceId = resourceId;
 	}
-	public int getUserId() {
+
+	public String getUserId() {
 		return userId;
 	}
-	public void setUserId(int userId) {
+
+	public void setUserId(String userId) {
 		this.userId = userId;
 	}
+
 	public boolean isCancelled() {
 		return cancelled;
 	}
+
 	public void setCancelled(boolean cancelled) {
 		this.cancelled = cancelled;
 	}
+
 	public boolean isApproved() {
 		return approved;
 	}
+
 	public void setApproved(boolean approved) {
 		this.approved = approved;
 	}
+
 	public Reservation() {
 		super();
 		// TODO Auto-generated constructor stub
 	}
+
 	public Reservation(int id, @NotNull Purpose purpose, LocalDateTime startTime, LocalDateTime endTime,
-			Resource resource, int resourceId, int userId, boolean cancelled, boolean approved) {
+			Resource resource, int resourceId, String userId, boolean cancelled, boolean approved) {
 		super();
 		this.id = id;
 		this.purpose = purpose;
@@ -104,6 +123,7 @@ public class Reservation {
 		this.cancelled = cancelled;
 		this.approved = approved;
 	}
+
 	@Override
 	public int hashCode() {
 		final int prime = 31;
@@ -116,9 +136,10 @@ public class Reservation {
 		result = prime * result + ((resource == null) ? 0 : resource.hashCode());
 		result = prime * result + resourceId;
 		result = prime * result + ((startTime == null) ? 0 : startTime.hashCode());
-		result = prime * result + userId;
+		result = prime * result + ((userId == null) ? 0 : userId.hashCode());
 		return result;
 	}
+
 	@Override
 	public boolean equals(Object obj) {
 		if (this == obj)
@@ -153,17 +174,19 @@ public class Reservation {
 				return false;
 		} else if (!startTime.equals(other.startTime))
 			return false;
-		if (userId != other.userId)
+		if (userId == null) {
+			if (other.userId != null)
+				return false;
+		} else if (!userId.equals(other.userId))
 			return false;
 		return true;
 	}
+
 	@Override
 	public String toString() {
 		return "Reservation [id=" + id + ", purpose=" + purpose + ", startTime=" + startTime + ", endTime=" + endTime
 				+ ", resource=" + resource + ", resourceId=" + resourceId + ", userId=" + userId + ", cancelled="
 				+ cancelled + ", approved=" + approved + "]";
 	}
-	
-	
 
 }
