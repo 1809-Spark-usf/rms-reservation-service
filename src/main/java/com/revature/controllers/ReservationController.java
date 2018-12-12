@@ -42,10 +42,9 @@ public class ReservationController {
 	ResourceClient resourceClient;
 
 	@Autowired
-	public ReservationController(ReservationService reservationService, ResourceClient resourceClient) {
+	public ReservationController(ReservationService reservationService) {
 		super();
 		this.reservationService = reservationService;
-		this.resourceClient = resourceClient;
 	}
 
 	private List<Resource> getResources() {
