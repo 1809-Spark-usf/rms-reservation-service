@@ -124,10 +124,9 @@ public class ReservationController {
 	}
 
 	// Authorization mapping
-	@PostMapping("authorization")
-
-	public static String getAccessToken(String code, HttpServletResponse response) throws IOException {
-
+	@GetMapping("authorization")
+	public static String getAccessToken(@RequestParam String code, HttpServletResponse response) throws IOException {
+		
 		final Map<String, String> env = System.getenv();
 
 		final String client_id = env.get("SLACK_LOGIN");
@@ -172,9 +171,9 @@ public class ReservationController {
 			BufferedReader reader = new BufferedReader(new InputStreamReader(stream, "UTF-8"), 8);
 			String result = reader.readLine();
 			String user = "";
-			if (result.contains("false")) {
+			if (result.contains("\"ok\":false,")) {
 				response.sendError(HttpServletResponse.SC_NOT_FOUND);
-				return null;
+				return "";
 			}
 			for (int i = 0; i < result.length() - 4; i++) {
 				if (result.charAt(i) == 'u' && result.substring(i, i + 4).equals("user")) {
@@ -188,11 +187,11 @@ public class ReservationController {
 					break;
 				}
 			}
-			response.setStatus(HttpServletResponse.SC_OK);
+			//response.sendError(HttpServletResponse.SC_OK);
 			return user;
 		} catch (IOException e) {
 			response.sendError(HttpServletResponse.SC_NOT_FOUND);
-			return null;
+			return "";
 
 		}
 
