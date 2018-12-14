@@ -38,6 +38,6 @@ public interface ReservationRepository extends JpaRepository<Reservation, Intege
 	@Query("update Reservation r set r.cancelled = true where r.id = :id")
 	public Reservation cancel(@Param("id") int id);
 	
-//	public List<Reservation> findAll();
+	public List<Reservation> findAll();
 
 }

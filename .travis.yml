@@ -12,10 +12,10 @@ jobs:
       script: mvn clean
   
     - stage: test
-      script: mvn test org.jacoco:jacoco-maven-plugin:prepare-agent
+      script: mvn test
     
     - stage: build
       script: mvn package
       
     - stage: quality
-      script: mvn sonar:sonar
+      script: mvn verify sonar:sonar
