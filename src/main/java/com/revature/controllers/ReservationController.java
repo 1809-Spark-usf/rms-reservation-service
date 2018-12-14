@@ -55,7 +55,6 @@ public class ReservationController {
 				new ParameterizedTypeReference<List<Resource>>() {
 				});
 		List<Resource> resources = response.getBody();
-		System.out.println(resources);
 		return resources;
 	}
 
@@ -94,14 +93,14 @@ public class ReservationController {
 		return reservationService.getReservationById(id);
 	}
 
-	@GetMapping("resource")
+	@GetMapping("available")
 	public List<Resource> getAvailableResources(@RequestParam(required = false) String location,
-			@RequestParam String startDateTime, @RequestParam String endDateTime,
+			@RequestParam String startTime, @RequestParam String endTime,
 			@RequestParam Purpose purpose) {
 
 		List<Resource> resources = getResources();
-		List<Integer> checkList = reservationService.getReservationResourceIds(LocalDateTime.parse(startDateTime),
-				LocalDateTime.parse(endDateTime));
+		List<Integer> checkList = reservationService.getReservationResourceIds(LocalDateTime.parse(startTime),
+				LocalDateTime.parse(endTime));
 
 		for (int resourceId : checkList) {
 			resources.removeIf(r -> r.getId() == resourceId);
@@ -113,7 +112,6 @@ public class ReservationController {
 		return resources;
 	}
 
-	@PostMapping("")
 	public Reservation saveReservation(@RequestBody Reservation reservation) {
 		return reservationService.saveReservation(reservation);
 	}
@@ -125,7 +123,6 @@ public class ReservationController {
 
 	// Authorization mapping
 	@PostMapping("authorization")
-
 	public static String getAccessToken(String code, HttpServletResponse response) throws IOException {
 
 		final Map<String, String> env = System.getenv();
@@ -198,19 +195,22 @@ public class ReservationController {
 
 	}
 	
-//	public List<Reservation> getReservationsWithDTO(Reservation reservationDTO) {
-//		Reservation reservation = new Reservation();
-//		reservation.setId(reservationDTO.getId());
-//		reservation.setPurpose(reservationDTO.getPurpose());
-//		reservation.setUserId(reservationDTO.getUserId());
-//		reservation.setCancelled(reservationDTO.isCancelled());
-//		reservation.setApproved(reservationDTO.isApproved());
-//		return reservationService.getReservationByCriteria(reservation);
-//	}
+	@PostMapping("")
+	public Reservation saveReservationsWithDTO(@RequestBody Reservation reservationDTO) {
+		Reservation reservation = new Reservation();
+		reservation.setPurpose(reservationDTO.getPurpose());
+		reservation.setStartTime(reservationDTO.getStartTime());
+		reservation.setEndTime(reservationDTO.getEndTime());
+		reservation.setUserId(reservationDTO.getUserId());
+		reservation.setResourceId(reservationDTO.getResourceId());
+		reservation.setCancelled(reservationDTO.isCancelled());
+		reservation.setApproved(reservationDTO.isApproved());
+		return reservationService.saveReservation(reservation);
+	}
 	
-//	@GetMapping("")
-//	public List<Reservation> getAll() {
-//		return reservationService.getAll();
-//	}
+	@GetMapping("")
+	public List<Reservation> getAll() {
+		return reservationService.getAll();
+	}
 
 }

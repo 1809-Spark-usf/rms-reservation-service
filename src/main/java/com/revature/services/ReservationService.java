@@ -25,7 +25,7 @@ public class ReservationService {
 	
 	public List<Reservation> getReservationsByUserId(String id) {
 		return reservationRepository.findByUserId(id);	
-	};
+	}
 	
 	public List<Reservation> getUpcomingReservationsByUserId(String id) {
 		return reservationRepository.findAllByUserIdAndUpcoming(id, LocalDateTime.now());
@@ -47,20 +47,20 @@ public class ReservationService {
 	}
 	public Reservation saveReservation(Reservation reservation) {
 		return reservationRepository.save(reservation);		
-	};
+	}
 
 	public Reservation cancelReservation(int id) {
 		return reservationRepository.cancel(id);	
-	};
+	}
 
 	
-//	public List<Reservation> getReservationByCriteria(Reservation reservation) {
-//		return reservationRepository.findAll(Example.of(reservation));
-//	}
-//
-//	public List<Reservation> getAll() {
-//		return reservationRepository.findAll();
-//	}
+	public List<Reservation> getReservationByCriteria(Reservation reservation) {
+		return reservationRepository.findAll(Example.of(reservation));
+	}
+
+	public List<Reservation> getAll() {
+		return reservationRepository.findAll();
+	}
 
 
 }
