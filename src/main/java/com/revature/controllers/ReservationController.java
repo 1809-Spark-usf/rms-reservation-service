@@ -126,55 +126,37 @@ public class ReservationController {
 	// Authorization mapping
 	@GetMapping("authorization")
 	public static String getAccessToken(@RequestParam String code, HttpServletResponse response) throws IOException {
-		
 		final Map<String, String> env = System.getenv();
 
+
 		final String client_id = env.get("SLACK_LOGIN");
-
 		final String client_secret = env.get("SLACK_PASSWORD");
-
 		String urlParameters = "code=" + code + "&" +
-
 				"  redirect_uri=http://localhost:4200/loading&" +
-
 				"  client_id=" + client_id + "&" +
-
 				"  client_secret=" + client_secret;
-
 		byte[] postData = urlParameters.getBytes(StandardCharsets.UTF_8);
-
 		int postDataLength = postData.length;
-
 		String request = "https://slack.com/api/oauth.access";
-
 		URL url = new URL(request);
-
 		HttpURLConnection conn = (HttpURLConnection) url.openConnection();
-
 		conn.setDoOutput(true);
-
 		conn.setInstanceFollowRedirects(false);
-
 		conn.setRequestMethod("POST");
-
 		conn.setRequestProperty("Content-Type", "application/x-www-form-urlencoded");
-
 		conn.setRequestProperty("charset", "utf-8");
-
 		conn.setRequestProperty("Content-Length", Integer.toString(postDataLength));
-
 		conn.setUseCaches(false);
-
 		try (DataOutputStream wr = new DataOutputStream(conn.getOutputStream())) {
 			wr.write(postData);
 			InputStream stream = conn.getInputStream();
 			BufferedReader reader = new BufferedReader(new InputStreamReader(stream, "UTF-8"), 8);
 			String result = reader.readLine();
-			String user = "";
 			if (result.contains("\"ok\":false,")) {
 				response.sendError(HttpServletResponse.SC_NOT_FOUND);
 				return "";
 			}
+			String user = "{";
 			for (int i = 0; i < result.length() - 4; i++) {
 				if (result.charAt(i) == 'u' && result.substring(i, i + 4).equals("user")) {
 					user += result.substring(i + 7, result.length());
@@ -188,6 +170,7 @@ public class ReservationController {
 				}
 			}
 			//response.sendError(HttpServletResponse.SC_OK);
+			user += "}";
 			return user;
 		} catch (IOException e) {
 			response.sendError(HttpServletResponse.SC_NOT_FOUND);
