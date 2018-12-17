@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.revature.exceptions.BadRequestException;
+import com.revature.models.Reservation;
 import com.revature.models.User;
 import com.revature.services.UserService;
 
@@ -55,6 +56,11 @@ public class UserController {
 	@GetMapping("logout")
 	public void logout(@RequestParam String token) throws Exception {
 		this.userService.logout(token);
+	}
+	
+	@GetMapping("calendar")
+	public String authorizeCalendar(@RequestParam String token, @RequestParam Reservation reservation) throws Exception {
+		return this.userService.authorizeCalendar(token, reservation);
 	}
 	
 	@ExceptionHandler(BadRequestException.class)

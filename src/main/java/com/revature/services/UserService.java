@@ -2,6 +2,7 @@ package com.revature.services;
 
 import java.io.IOException;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.Map;
 
 import javax.transaction.Transactional;
@@ -19,6 +20,7 @@ import org.springframework.web.client.RestTemplate;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.revature.exceptions.BadRequestException;
+import com.revature.models.Reservation;
 import com.revature.models.SlackDto;
 import com.revature.models.User;
 import com.revature.repositories.UserRepository;
@@ -112,7 +114,7 @@ public class UserService {
 			throw new BadRequestException("Mapping problem");
 		}
         
-        if (slackResponse.error != null ) {
+        if (slackResponse.getError() != null ) {
         	throw new BadRequestException("Login Failed!");
         }
         // Gets the user, adds a token expiration date as 2 weeks from today, and
@@ -127,7 +129,7 @@ public class UserService {
         // Add user's last login to database, then return the user.
 		
 		/////////////////////////////////////////////////////////////////////
-        // Ben's Original implementation (in case last minute changes above fail)
+        // Original implementation (in case last minute changes above fail)
         /////////////////////////////////////////////////////////////////////
 //		final Map<String, String> env = System.getenv();
 //		final String client_id = env.get("SLACK_LOGIN");
@@ -183,7 +185,124 @@ public class UserService {
 //		return user;
 
 	}
+
+	public String authorizeCalendar(String code, Reservation reservation) {
+		final Map<String, String> env = System.getenv();
+		final String client_id = env.get("GOOGLE_CLIENT_ID");
+		final String client_secret = env.get("GOOGLE_SECRET");
+
+		
+		RestTemplate restTemplate = new RestTemplate();
+		String url = "https://www.googleapis.com/oauth2/v4/token";
+		
+		HttpHeaders headers = new HttpHeaders();
+		headers.setContentType(MediaType.APPLICATION_FORM_URLENCODED);
+		MultiValueMap<String, String> map= new LinkedMultiValueMap<String, String>();
+		map.add("code", code);
+//		map.add("redirect_uri", "http://localhost:4200/loading");
+		map.add("client_id", client_id);
+		map.add("client_secret", client_secret);
+		map.add("grant_type", "authorization_code");
+		
+		HttpEntity<MultiValueMap<String, String>> request = new HttpEntity<MultiValueMap<String, String>>(map, headers);
+		ResponseEntity<String> result = restTemplate.postForEntity( url, request , String.class );
+		// If login fails, throw exception
+		 if (!result.getStatusCode().is2xxSuccessful()) {
+				throw new BadRequestException("Google API connection error");
+		 }
+		 // Handle the response body -- we need to get the token out of it.
+        String resultBody = result.getBody();
+        GoogleDto googleResponse;
+        try {
+	        ObjectMapper objectMapper = new ObjectMapper();
+	        googleResponse = objectMapper.readValue(resultBody, new TypeReference<GoogleDto>(){});
+		} catch (IOException e) {
+			e.printStackTrace();
+			throw new BadRequestException("Mapping problem");
+		}
+        System.out.println(googleResponse);
+        if (googleResponse.getAccess_token() == null ) {
+        	throw new BadRequestException("Login Failed!");
+        }
+        
+        // Now we have the token, we can construct the response
+        // For simplicity and in the interest of time, this will be created as a concatenated string.
+        
+        // Gets the user, adds a token expiration date as 2 weeks from today, and
+        // then generates a token to be saved by the front end in local storage.
+//         POST TO:
+//"        https://www.googleapis.com/calendar/v3/calendars/calendarId/events
+//        "Authorization: Bearer your_auth_token
+//        Host: www.googleapis.com
+//        Content-Type: multipart/mixed; boundary=batch_foobarbaz
+//        Content-Length: total_content_length
+        
+         String event = "{\"end\": { \"dateTime\": \"" + reservation.getEndTime() + "\"}, "
+         		+ "\"start\": { \"dateTime\": \"" + reservation.getStartTime() + "\"}, "
+         		+ "\"description\": \" Revature " + reservation.getPurpose().toString().toLowerCase() + " in " + reservation.getResource().getName()
+         		+ "}";
+         
+ 		String eventUrl = "https://www.googleapis.com/calendar/v3/calendars/calendarId/events";
+		
+ 		RestTemplate googleRestTemplate = new RestTemplate();
+ 		
+ 		HttpHeaders eventHeaders = new HttpHeaders();
+ 		headers.add("Authorization", "Bearer " + googleResponse.getAccess_token());
+ 		headers.setContentType(MediaType.APPLICATION_JSON);
+ 
+		HttpEntity<String> googleRequest = new HttpEntity<String>(event, headers);
+ 		ResponseEntity<String> eventResult = restTemplate.postForEntity( eventUrl, event, String.class );
+ 		
+ 		return eventResult.getBody();
+	}
 	
-	
+	class GoogleDto {
+		private String access_token;
+		private String id_token;
+		private String refresh_token;
+		private String expires_in;
+		private String token_type;
+		
+		@Override
+		public String toString() {
+			return "GoogleDto [access_token=" + access_token + ", id_token=" + id_token + ", refresh_token="
+					+ refresh_token + ", expires_in=" + expires_in + ", token_type=" + token_type + "]";
+		}
+		public String getAccess_token() {
+			return access_token;
+		}
+		public void setAccess_token(String access_token) {
+			this.access_token = access_token;
+		}
+		public String getId_token() {
+			return id_token;
+		}
+		public void setId_token(String id_token) {
+			this.id_token = id_token;
+		}
+		public String getRefresh_token() {
+			return refresh_token;
+		}
+		public void setRefresh_token(String refresh_token) {
+			this.refresh_token = refresh_token;
+		}
+		public String getExpires_in() {
+			return expires_in;
+		}
+		public void setExpires_in(String expires_in) {
+			this.expires_in = expires_in;
+		}
+		public String getToken_type() {
+			return token_type;
+		}
+		public void setToken_type(String token_type) {
+			this.token_type = token_type;
+		}
+		public GoogleDto() {
+			super();
+			// TODO Auto-generated constructor stub
+		}
+		
+	}
 
 }
