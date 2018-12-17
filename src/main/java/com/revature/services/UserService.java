@@ -91,7 +91,8 @@ public class UserService {
 
 		MultiValueMap<String, String> map= new LinkedMultiValueMap<String, String>();
 		map.add("code", code);
-		map.add("redirect_uri", "http://localhost:4200/loading");
+//		map.add("redirect_uri", "http://localhost:4200/loading");
+		map.add("redirect_uri", env.get("APP_URL") + "loading");
 		map.add("client_id", client_id);
 		map.add("client_secret", client_secret);
 
