@@ -2,7 +2,6 @@ package com.revature.services;
 
 import java.io.IOException;
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.util.Map;
 
 import javax.transaction.Transactional;
@@ -19,9 +18,10 @@ import org.springframework.web.client.RestTemplate;
 
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.revature.dtos.GoogleDto;
+import com.revature.dtos.SlackDto;
 import com.revature.exceptions.BadRequestException;
 import com.revature.models.Reservation;
-import com.revature.models.SlackDto;
 import com.revature.models.User;
 import com.revature.repositories.UserRepository;
 
@@ -82,7 +82,6 @@ public class UserService {
 		final String client_id = env.get("SLACK_LOGIN");
 		final String client_secret = env.get("SLACK_PASSWORD");
 
-		
 		RestTemplate restTemplate = new RestTemplate();
 		String url = "https://slack.com/api/oauth.access";
 		
@@ -123,68 +122,10 @@ public class UserService {
         User resultUser = slackResponse.getUser();
         resultUser.setExpiration(LocalDate.now().plusWeeks(2));
         resultUser.setToken(resultUser.getId() + "." + (int)(Math.random() * 10000000));
-        // Saves or updates user in the database
+        // Saves or updates user in the database with last login
         userRepository.saveAndFlush(resultUser);
         
         return resultUser;
-        // Add user's last login to database, then return the user.
-		
-		/////////////////////////////////////////////////////////////////////
-        // Original implementation (in case last minute changes above fail)
-        /////////////////////////////////////////////////////////////////////
-//		final Map<String, String> env = System.getenv();
-//		final String client_id = env.get("SLACK_LOGIN");
-//		final String client_secret = env.get("SLACK_PASSWORD");
-//		String urlParameters = "code=" + code + "&" +
-//			"  redirect_uri=http://localhost:4200/loading&" +
-//			"  client_id=" + client_id + "&" +
-//			"  client_secret=" + client_secret;
-//		byte[] postData = urlParameters.getBytes(StandardCharsets.UTF_8);
-//		int postDataLength = postData.length;
-//		String request = "https://slack.com/api/oauth.access";
-//		URL url = new URL(request);
-//		HttpURLConnection conn = (HttpURLConnection) url.openConnection();
-//		conn.setDoOutput(true);
-//		conn.setInstanceFollowRedirects(false);
-//		conn.setRequestMethod("POST");
-//		conn.setRequestProperty("Content-Type", "application/x-www-form-urlencoded");
-//		conn.setRequestProperty("charset", "utf-8");
-//		conn.setRequestProperty("Content-Length", Integer.toString(postDataLength));
-//		conn.setUseCaches(false);
-//		
-//		String result;
-//		try (DataOutputStream wr = new DataOutputStream(conn.getOutputStream())) {
-//			wr.write(postData);
-//			InputStream stream = conn.getInputStream();
-//			BufferedReader reader = new BufferedReader(new InputStreamReader(stream, "UTF-8"), 8);
-//			result = reader.readLine();
-//		} catch (IOException e) {
-//			response.sendError(HttpServletResponse.SC_NOT_FOUND);
-//			return "";
-//		}
-//		// Manually parses the response.
-//			// If response has "ok": false, then we know the authorization failed.
-//		if (result.contains("\"ok\":false,")) {
-//			response.sendError(HttpServletResponse.SC_NOT_FOUND);
-//			return "";
-//		}
-//		// Manually concatenate the response as a JSON string.
-//		String user = "{";
-//		for (int i = 0; i < result.length() - 4; i++) {
-//			if (result.charAt(i) == 'u' && result.substring(i, i + 4).equals("user")) {
-//				user += result.substring(i + 7, result.length());
-//				break;
-//			}
-//		}
-//		for (int i = 0; i < user.length() - 4; i++) {
-//			if (user.charAt(i) == 't' && user.substring(i, i + 4).equals("team")) {
-//				user = user.substring(0, i - 3);
-//				break;
-//			}
-//		}
-//		user += "}";
-//		return user;
-
 	}
 
 	public String authorizeCalendar(String code, Reservation reservation) {
@@ -257,53 +198,4 @@ public class UserService {
  		return eventResult.getBody();
 	}
 	
-	class GoogleDto {
-		private String access_token;
-		private String id_token;
-		private String refresh_token;
-		private String expires_in;
-		private String token_type;
-		
-		@Override
-		public String toString() {
-			return "GoogleDto [access_token=" + access_token + ", id_token=" + id_token + ", refresh_token="
-					+ refresh_token + ", expires_in=" + expires_in + ", token_type=" + token_type + "]";
-		}
-		public String getAccess_token() {
-			return access_token;
-		}
-		public void setAccess_token(String access_token) {
-			this.access_token = access_token;
-		}
-		public String getId_token() {
-			return id_token;
-		}
-		public void setId_token(String id_token) {
-			this.id_token = id_token;
-		}
-		public String getRefresh_token() {
-			return refresh_token;
-		}
-		public void setRefresh_token(String refresh_token) {
-			this.refresh_token = refresh_token;
-		}
-		public String getExpires_in() {
-			return expires_in;
-		}
-		public void setExpires_in(String expires_in) {
-			this.expires_in = expires_in;
-		}
-		public String getToken_type() {
-			return token_type;
-		}
-		public void setToken_type(String token_type) {
-			this.token_type = token_type;
-		}
-		public GoogleDto() {
-			super();
-			// TODO Auto-generated constructor stub
-		}
-		
-	}
-
 }

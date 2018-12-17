@@ -1,7 +1,13 @@
-package com.revature.models;
+package com.revature.dtos;
 
 import com.fasterxml.jackson.databind.node.ObjectNode;
+import com.revature.models.User;
 
+/**
+ * DTO for the Slack API.
+ * To do: Configure Jackson so names with underscores can be changes to camel case.
+ *
+ */
 public class SlackDto {
 	public boolean ok;
 	public String access_token;
