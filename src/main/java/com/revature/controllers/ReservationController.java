@@ -15,6 +15,7 @@ import java.util.Map;
 import javax.servlet.http.HttpServletResponse;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.ResponseEntity;
@@ -36,7 +37,10 @@ import com.revature.services.ReservationService;
 @RestController
 @RequestMapping("")
 public class ReservationController {
-
+	
+	@Value("${RMS_RESOURCE_URL:localhost:8080/resources}")
+	String uri;
+	
 	ReservationService reservationService;
 
 	@Autowired
@@ -46,10 +50,9 @@ public class ReservationController {
 	}
 
 	private List<Resource> getResources() {
-		final String uri = "http://localhost:4000/";
 
 		RestTemplate restTemplate = new RestTemplate();
-		ResponseEntity<List<Resource>> response = restTemplate.exchange(uri, HttpMethod.GET, null,
+		ResponseEntity<List<Resource>> response = restTemplate.exchange(this.uri, HttpMethod.GET, null,
 				new ParameterizedTypeReference<List<Resource>>() {
 				});
 		List<Resource> resources = response.getBody();
@@ -58,9 +61,8 @@ public class ReservationController {
 
 	private Resource getResourceById(int id) {
 
-		String uri = "http://localhost:4000/";
 		String idUri = Integer.toString(id);
-		String requestUri = uri + idUri;
+		String requestUri = this.uri + idUri;
 
 		RestTemplate restTemplate = new RestTemplate();
 		Resource[] result = restTemplate.getForObject(requestUri, Resource[].class);
