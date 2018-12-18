@@ -29,7 +29,6 @@ import org.springframework.web.client.RestTemplate;
 
 import com.revature.enumerations.Purpose;
 import com.revature.enumerations.Type;
-import com.revature.feign.ResourceClient;
 import com.revature.models.Reservation;
 import com.revature.models.Resource;
 import com.revature.services.ReservationService;
