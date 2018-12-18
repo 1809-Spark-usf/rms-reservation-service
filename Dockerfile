@@ -1,3 +1,3 @@
-FROM openjdk:8-jre
-ADD target/RMSReservationService-0.0.1-SNAPSHOT.jar /tmp/RMSReservationService-0.0.1-SNAPSHOT.jar
-ENTRYPOINT ["java", "-jar", "/tmp/RMSReservationService-0.0.1-SNAPSHOT.jar", "&"]
+FROM openjdk:8-jdk-alpine
+COPY target/RMSReservationService-0.0.1-SNAPSHOT.jar
+CMD ["java", "-jar", "/RMSReservationService-0.0.1-SNAPSHOT.jar", "--server.servlet.context-path=/rms-reservation" ,"&"]
