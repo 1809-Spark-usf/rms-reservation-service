@@ -1,6 +1,7 @@
 package com.revature.controllers;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -10,7 +11,6 @@ import org.springframework.http.HttpMethod;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -38,10 +38,26 @@ public class ReservationController {
 		this.reservationService = reservationService;
 	}
 
-	private List<Resource> getResources() {
-
+	private List<Resource> getResourcesByBuilding(int buildingId) {
+		
 		RestTemplate restTemplate = new RestTemplate();
-		ResponseEntity<List<Resource>> response = restTemplate.exchange(this.uri, HttpMethod.GET, null,
+		ResponseEntity<List<Resource>> response = restTemplate.exchange
+				(this.uri + "/buildings/" + String.valueOf(buildingId), 
+				HttpMethod.GET, 
+				null,
+				new ParameterizedTypeReference<List<Resource>>() {
+				});
+		List<Resource> resources = response.getBody();
+		return resources;
+	}
+	
+private List<Resource> getResourcesByCampus(int campusId) {
+		
+		RestTemplate restTemplate = new RestTemplate();
+		ResponseEntity<List<Resource>> response = restTemplate.exchange
+				(this.uri + "/campus/" + String.valueOf(campusId), 
+				HttpMethod.GET, 
+				null,
 				new ParameterizedTypeReference<List<Resource>>() {
 				});
 		List<Resource> resources = response.getBody();
@@ -83,12 +99,19 @@ public class ReservationController {
 	}
 
 	@GetMapping("available")
-	public List<Resource> getAvailableResources(@RequestParam(required = false) String location,
+	public List<Resource> getAvailableResources(
 			@RequestParam String startTime, @RequestParam String endTime,
-			@RequestParam Purpose purpose) {
-
-		List<Resource> resources = getResources();
-		List<Integer> checkList = reservationService.getReservationResourceIds(LocalDateTime.parse(startTime),
+			@RequestParam Purpose purpose,
+			@RequestParam Integer campusId,
+			@RequestParam(required=false) Integer buildingId) {
+		List<Resource> resources = new ArrayList<>();
+		if(buildingId != null) {
+			resources = getResourcesByBuilding(buildingId);
+		} else {
+			resources = getResourcesByCampus(campusId);
+		}
+		List<Integer> checkList = reservationService
+				.getReservationResourceIds(LocalDateTime.parse(startTime),
 				LocalDateTime.parse(endTime));
 
 		for (int resourceId : checkList) {
