@@ -49,8 +49,8 @@ public class ReservationService {
 		return reservationRepository.save(reservation);		
 	}
 
-	public Reservation cancelReservation(int id) {
-		return reservationRepository.cancel(id);	
+	public int cancelReservation(int id) {
+		return reservationRepository.cancel(id);
 	}
 
 	

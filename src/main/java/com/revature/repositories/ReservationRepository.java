@@ -34,9 +34,8 @@ public interface ReservationRepository extends JpaRepository<Reservation, Intege
 	
 	public Reservation findById(int id);
 	
-	@Modifying
-	@Query("update Reservation r set r.cancelled = true where r.id = :id")
-	public Reservation cancel(@Param("id") int id);
+	@Query(value = "UPDATE reservations SET cancelled = true WHERE id = ?1 RETURNING id", nativeQuery = true)
+	public int cancel(int id);
 	
 	public List<Reservation> findAll();
 

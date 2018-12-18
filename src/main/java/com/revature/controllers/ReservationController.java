@@ -105,12 +105,11 @@ public class ReservationController {
 		return reservationService.saveReservation(reservation);
 	}
 
-	@PutMapping("cancel")
-	public void cancelReservation(@RequestParam int id) {
-		reservationService.cancelReservation(id);
+	@PostMapping("cancel")
+	public int cancelReservation(@RequestParam int id) {
+		return reservationService.cancelReservation(id);
 	}
 
-	
 	@PostMapping("")
 	public Reservation saveReservationsWithDTO(@RequestBody Reservation reservationDTO) {
 		Reservation reservation = new Reservation();
