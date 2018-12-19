@@ -5,3 +5,6 @@ spring:
   profiles:
     active: ${RMS_APP_PROFILE:local}
 
+  cloud:
+    config:
+      uri: http://mitchell-rms-1500652919.us-west-1.elb.amazonaws.com/rms-config/
