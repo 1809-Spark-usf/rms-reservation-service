@@ -26,10 +26,10 @@ import com.revature.services.ReservationService;
 @RestController
 @RequestMapping("")
 public class ReservationController {
-	
+
 	@Value("${RMS_RESOURCE_URL:localhost:8080/resources}")
 	String uri;
-	
+
 	ReservationService reservationService;
 
 	@Autowired
@@ -39,25 +39,21 @@ public class ReservationController {
 	}
 
 	private List<Resource> getResourcesByBuilding(int buildingId) {
-		
+
 		RestTemplate restTemplate = new RestTemplate();
-		ResponseEntity<List<Resource>> response = restTemplate.exchange
-				(this.uri + "/buildings/" + String.valueOf(buildingId), 
-				HttpMethod.GET, 
-				null,
+		ResponseEntity<List<Resource>> response = restTemplate.exchange(
+				this.uri + "/buildings/" + String.valueOf(buildingId), HttpMethod.GET, null,
 				new ParameterizedTypeReference<List<Resource>>() {
 				});
 		List<Resource> resources = response.getBody();
 		return resources;
 	}
-	
-private List<Resource> getResourcesByCampus(int campusId) {
-		
+
+	private List<Resource> getResourcesByCampus(int campusId) {
+
 		RestTemplate restTemplate = new RestTemplate();
-		ResponseEntity<List<Resource>> response = restTemplate.exchange
-				(this.uri + "/campus/" + String.valueOf(campusId), 
-				HttpMethod.GET, 
-				null,
+		ResponseEntity<List<Resource>> response = restTemplate.exchange(
+				this.uri + "/campus/" + String.valueOf(campusId), HttpMethod.GET, null,
 				new ParameterizedTypeReference<List<Resource>>() {
 				});
 		List<Resource> resources = response.getBody();
@@ -99,13 +95,13 @@ private List<Resource> getResourcesByCampus(int campusId) {
 	}
 
 	@GetMapping("available")
-	public List<Resource> getAvailableResources(
-			@RequestParam String startTime, @RequestParam String endTime,
-			@RequestParam Purpose purpose,
+	public List<Resource> getAvailableResources(@RequestParam String startTime, 
+			@RequestParam String endTime,
+			@RequestParam Purpose purpose, 
 			@RequestParam Integer campusId,
-			@RequestParam(required=false) Integer buildingId) {
+			@RequestParam(required = false) Integer buildingId) {
 		List<Resource> resources = new ArrayList<>();
-		if(buildingId == null) {
+		if (buildingId != null) {
 			resources = getResourcesByBuilding(buildingId);
 		} else {
 			resources = getResourcesByCampus(campusId);
@@ -145,11 +141,10 @@ private List<Resource> getResourcesByCampus(int campusId) {
 		reservation.setApproved(reservationDTO.isApproved());
 		return reservationService.saveReservation(reservation);
 	}
-	
+
 	@GetMapping("")
 	public List<Reservation> getAll() {
 		return reservationService.getAll();
 	}
 
 }
-
