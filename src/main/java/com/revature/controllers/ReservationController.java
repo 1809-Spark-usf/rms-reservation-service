@@ -105,7 +105,7 @@ private List<Resource> getResourcesByCampus(int campusId) {
 			@RequestParam Integer campusId,
 			@RequestParam(required=false) Integer buildingId) {
 		List<Resource> resources = new ArrayList<>();
-		if(buildingId != null) {
+		if(buildingId == null) {
 			resources = getResourcesByBuilding(buildingId);
 		} else {
 			resources = getResourcesByCampus(campusId);
