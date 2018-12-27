@@ -79,8 +79,8 @@ public class UserService {
 	 */
 	public User login(String code) throws Exception {
 		final Map<String, String> env = System.getenv();
-		final String client_id = env.get("SLACK_LOGIN");
-		final String client_secret = env.get("SLACK_PASSWORD");
+		final String client_id = env.get("REFORCE_SLACK_CLIENT_ID");
+		final String client_secret = env.get("REFORCE_SLACK_CLIENT_SECRET");
 
 		RestTemplate restTemplate = new RestTemplate();
 		String url = "https://slack.com/api/oauth.access";
@@ -91,7 +91,7 @@ public class UserService {
 		MultiValueMap<String, String> map= new LinkedMultiValueMap<String, String>();
 		map.add("code", code);
 //		map.add("redirect_uri", "http://localhost:4200/loading");
-		map.add("redirect_uri", env.get("APP_URL") + "loading");
+		map.add("redirect_uri", env.get("REFORCE_WEBCLIENT_URL") + "loading");
 		map.add("client_id", client_id);
 		map.add("client_secret", client_secret);
 
@@ -115,6 +115,7 @@ public class UserService {
 		}
         
         if (slackResponse.getError() != null ) {
+        	System.out.println(slackResponse.getError());
         	throw new BadRequestException("Login Failed!");
         }
         // Gets the user, adds a token expiration date as 2 weeks from today, and
