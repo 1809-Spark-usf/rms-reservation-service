@@ -2,11 +2,24 @@ spring:
   application:
     name: reservations
 
+ # Set current profile with local as default
   profiles:
-    active: clouddev
-#---
-#spring:
-#  profiles: clouddev
-#  cloud:
-#    config:
-#      uri: http://mitchell-rms-1500652919.us-west-1.elb.amazonaws.com/rms-config/
+    active: ${RMS_APP_PROFILE:local}  
+
+---
+spring:
+  profiles: local
+  
+  # Provide configuration location in the local profile
+  cloud:
+    config:
+      uri: http://localhost:8888
+
+---
+spring:
+  profiles: clouddev
+  
+  # Provide configuration location in the clouddev profile
+  cloud:
+    config:
+      uri: http://mitchell-rms-1500652919.us-west-1.elb.amazonaws.com/rms-config/ 
