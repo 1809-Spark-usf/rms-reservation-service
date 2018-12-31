@@ -27,14 +27,20 @@ import com.revature.repositories.UserRepository;
 
 /**
  * Contains Slack Response object class and methods for managing the Slack API login and token access.  
- * @author Clay
+ * @author 1811-Java-Nick 12/27/18
  *
  */
 @Service
 public class UserService {
 	
+	/** The user repository. */
 	UserRepository userRepository;
 
+	/**
+	 * Instantiates a new user service.
+	 *
+	 * @param userRepository the user repository
+	 */
 	@Autowired
 	public UserService(UserRepository userRepository) {
 		super();
@@ -44,9 +50,10 @@ public class UserService {
 	/**
 	 * Checks token (from cookie on the front end) to see 
 	 * if it matches with the entry in the database and is not over 2 weeks old.
-	 * @param token
-	 * @return
-	 * @throws Exception
+	 *
+	 * @param token the token
+	 * @return the user
+	 * @throws Exception the exception
 	 */
 	public User checkToken(String token) throws Exception {
 		User user = userRepository.findByTokenAndExpirationAfter(token, LocalDate.now()).orElse(null);
@@ -58,6 +65,8 @@ public class UserService {
 	
 	/**
 	 * Logs out user by setting expiration date to now.
+	 *
+	 * @param token the token
 	 */
 	@Transactional
 	public void logout(String token) {
@@ -73,9 +82,10 @@ public class UserService {
 	 * Logs user in by requesting the Slack API for information.
 	 *  Note: Token should be updated to some kind of hashed code.
 	 *  Currently, it would be very easy to break in to if you had a user's slack ID.
-	 * @param code
-	 * @return
-	 * @throws Exception
+	 *
+	 * @param code the code
+	 * @return the user
+	 * @throws Exception the exception
 	 */
 	public User login(String code) throws Exception {
 		final Map<String, String> env = System.getenv();
@@ -129,6 +139,13 @@ public class UserService {
         return resultUser;
 	}
 
+	/**
+	 * Authorize calendar.
+	 *
+	 * @param code the code
+	 * @param reservation the reservation
+	 * @return the string
+	 */
 	public String authorizeCalendar(String code, Reservation reservation) {
 		final Map<String, String> env = System.getenv();
 		final String client_id = env.get("GOOGLE_CLIENT_ID");
@@ -168,17 +185,17 @@ public class UserService {
         	throw new BadRequestException("Login Failed!");
         }
         
-        // Now we have the token, we can construct the response
-        // For simplicity and in the interest of time, this will be created as a concatenated string.
+        /*Now we have the token, we can construct the response
+         For simplicity and in the interest of time, this will be created as a concatenated string.
         
-        // Gets the user, adds a token expiration date as 2 weeks from today, and
-        // then generates a token to be saved by the front end in local storage.
-//         POST TO:
-//"        https://www.googleapis.com/calendar/v3/calendars/calendarId/events
-//        "Authorization: Bearer your_auth_token
-//        Host: www.googleapis.com
-//        Content-Type: multipart/mixed; boundary=batch_foobarbaz
-//        Content-Length: total_content_length
+         Gets the user, adds a token expiration date as 2 weeks from today, and
+         then generates a token to be saved by the front end in local storage.
+         POST TO:
+        	https://www.googleapis.com/calendar/v3/calendars/calendarId/events
+        	"Authorization: Bearer your_auth_token
+         Host: www.googleapis.com
+         Content-Type: multipart/mixed; boundary=batch_foobarbaz
+         Content-Length: total_content_length*/
         
          String event = "{\"end\": { \"dateTime\": \"" + reservation.getEndTime() + "\"}, "
          		+ "\"start\": { \"dateTime\": \"" + reservation.getStartTime() + "\"}, "
