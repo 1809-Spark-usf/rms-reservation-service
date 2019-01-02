@@ -1,5 +1,6 @@
 package com.revature.controllers;
 
+import java.net.URI;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -32,7 +33,7 @@ import com.revature.services.ReservationService;
 @RequestMapping("")
 public class ReservationController {
 
-	@Value("${RMS_RESOURCE_URL:localhost:8080/resources}")
+	@Value("${RMS_RESOURCE_URL:http://localhost:8080/resources}")
 	String uri;
 
 	ReservationService reservationService;
@@ -51,12 +52,13 @@ public class ReservationController {
 	 * Returns a list of resources based on the building's identification number.
 	 * @param buildingId The identification number for a building.
 	 * @return A list of resources. 
+	 * @author Jaron 1811-Java-Nick 1/2/19
 	 */
 	private List<Resource> getResourcesByBuilding(int buildingId) {
-
+		
 		RestTemplate restTemplate = new RestTemplate();
 		ResponseEntity<List<Resource>> response = restTemplate.exchange(
-				this.uri + "/buildings/" + String.valueOf(buildingId), HttpMethod.GET, null,
+				URI.create(this.uri + "/building/" + String.valueOf(buildingId)), HttpMethod.GET, null,
 				new ParameterizedTypeReference<List<Resource>>() {
 				});
 		List<Resource> resources = response.getBody();
@@ -67,12 +69,13 @@ public class ReservationController {
 	 * Returns a list of resources based on the campus identification number.
 	 * @param campusId The identification number for a campus.
 	 * @return A list of resources. 
+	 * @author Jaron 1811-Java-Nick 1/2/19
 	 */
 	private List<Resource> getResourcesByCampus(int campusId) {
 
 		RestTemplate restTemplate = new RestTemplate();
 		ResponseEntity<List<Resource>> response = restTemplate.exchange(
-				this.uri + "/campus/" + String.valueOf(campusId), HttpMethod.GET, null,
+				URI.create(this.uri + "/campus/" + String.valueOf(campusId)), HttpMethod.GET, null,
 				new ParameterizedTypeReference<List<Resource>>() {
 				});
 		List<Resource> resources = response.getBody();
@@ -83,11 +86,12 @@ public class ReservationController {
 	 * Returns a resource based on a resource identification number.
 	 * @param id The identification number for a resource.
 	 * @return A resource. 
+	 * @author Jaron 1811-Java-Nick 1/2/19
 	 */
 	private Resource getResourceById(int id) {
 
 		String idUri = Integer.toString(id);
-		String requestUri = this.uri + idUri;
+		URI requestUri = URI.create(this.uri + "/" + idUri);
 
 		RestTemplate restTemplate = new RestTemplate();
 		Resource[] result = restTemplate.getForObject(requestUri, Resource[].class);

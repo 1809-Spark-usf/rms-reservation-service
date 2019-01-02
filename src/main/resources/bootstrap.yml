@@ -4,7 +4,7 @@ spring:
 
  # Set current profile with local as default
   profiles:
-    active: ${RMS_APP_PROFILE:local}  
+    active: ${RMS_APP_PROFILE:local}, ${RMS_APP_PROFILE:h2}  
 
 ---
 spring:
