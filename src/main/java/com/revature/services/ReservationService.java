@@ -141,7 +141,7 @@ public class ReservationService {
 	 * @param resource
 	 * @author Austin D. 1811-Java-Nick 1/3/19 
 	 */
-	public void postToEmailService(Reservation reservation, Resource resource) {
+	public void postConfirmationToEmailService(Reservation reservation, Resource resource) {
 		String buildingName = resource.getBuilding().getName();
 		String resourceName = resource.getName();
 		String userEmail = userService.findUserById(reservation.getUserId()).getEmail();
