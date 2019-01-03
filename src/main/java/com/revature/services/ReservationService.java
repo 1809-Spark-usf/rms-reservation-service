@@ -145,9 +145,24 @@ public class ReservationService {
 		String buildingName = resource.getBuilding().getName();
 		String resourceName = resource.getName();
 		String userEmail = userService.findUserById(reservation.getUserId()).getEmail();
-		ReservationEmail reservationEmail = new ReservationEmail(userEmail, reservation.getStartTime(), reservation.getEndTime(), buildingName, resourceName);
+		ReservationEmail reservationEmail = new ReservationEmail(userEmail, reservation.getStartTime(), reservation.getEndTime(), buildingName, resourceName, reservation.getId());
 		new RestTemplate().postForLocation(URI.create("http://localhost:8080/email/sendconfirmation"), reservationEmail);
 		
+	}
+	
+	/**
+	 * Posts a ReservationEmail object to the Email service
+	 * in order to send a cancellation email to the user
+	 * @param reservation
+	 * @param resource
+	 * @author Austin D. 1811-Java-Nick 1/3/19 
+	 */
+	public void postCancellationToEmailService(Reservation reservation, Resource resource) {
+		String buildingName = resource.getBuilding().getName();
+		String resourceName = resource.getName();
+		String userEmail = userService.findUserById(reservation.getUserId()).getEmail();
+		ReservationEmail reservationEmail = new ReservationEmail(userEmail, reservation.getStartTime(), reservation.getEndTime(), buildingName, resourceName, reservation.getId());
+		new RestTemplate().postForLocation(URI.create("http://localhost:8080/email/sendcancellation"), reservationEmail);
 	}
 
 

@@ -20,22 +20,28 @@ public class ReservationEmail {
 	private String buildingName;
 	/**The resource name associated with the building*/
 	private String resourceName;
+	/**The id of the reservation for reminder purposes*/
+	private int reservationId;
 	public ReservationEmail() {
 		super();
 	}
+	
 	@Override
 	public String toString() {
 		return "ReservationEmail [email=" + email + ", startTime=" + startTime + ", endTime=" + endTime
-				+ ", buildingName=" + buildingName + ", resourceName=" + resourceName + "]";
+				+ ", buildingName=" + buildingName + ", resourceName=" + resourceName + ", reservationId="
+				+ reservationId + "]";
 	}
+
 	public ReservationEmail(String email, LocalDateTime startTime, LocalDateTime endTime, String buildingName,
-			String resourceName) {
+			String resourceName, int reservationId) {
 		super();
 		this.email = email;
 		this.startTime = startTime;
 		this.endTime = endTime;
 		this.buildingName = buildingName;
 		this.resourceName = resourceName;
+		this.reservationId = reservationId;
 	}
 	public String getEmail() {
 		return email;
@@ -67,5 +73,14 @@ public class ReservationEmail {
 	public void setResourceName(String resourceName) {
 		this.resourceName = resourceName;
 	}
+
+	public int getReservationId() {
+		return reservationId;
+	}
+
+	public void setReservationId(int reservationId) {
+		this.reservationId = reservationId;
+	}
+
 
 }
