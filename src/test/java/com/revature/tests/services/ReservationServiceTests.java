@@ -14,11 +14,13 @@ import com.revature.exceptions.NotFoundException;
 import com.revature.models.Reservation;
 import com.revature.repositories.ReservationRepository;
 import com.revature.services.ReservationService;
+import com.revature.services.UserService;
 
 public class ReservationServiceTests {
 	
 	ReservationRepository mockReservationRepository = mock(ReservationRepository.class);
-	ReservationService reservationService = new ReservationService(mockReservationRepository);
+	UserService userService = new UserService();
+	ReservationService reservationService = new ReservationService(mockReservationRepository, userService);
 	Purpose purpose;
 	LocalDateTime startTime;
 	LocalDateTime endTime;

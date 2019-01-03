@@ -33,6 +33,10 @@ import com.revature.repositories.UserRepository;
 @Service
 public class UserService {
 	
+	public UserService() {
+		super();
+	}
+
 	/** The user repository. */
 	UserRepository userRepository;
 
