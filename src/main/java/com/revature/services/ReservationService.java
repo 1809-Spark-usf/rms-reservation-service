@@ -1,13 +1,17 @@
 package com.revature.services;
 
+import java.net.URI;
 import java.time.LocalDateTime;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Example;
 import org.springframework.stereotype.Service;
+import org.springframework.web.client.RestTemplate;
 
 import com.revature.models.Reservation;
+import com.revature.models.ReservationEmail;
+import com.revature.models.Resource;
 import com.revature.repositories.ReservationRepository;
 
 /**
@@ -19,7 +23,8 @@ public class ReservationService {
 
 	/** The reservation repository. */
 	ReservationRepository reservationRepository;
-	
+	/** Using the user service to access the user repository*/
+	UserService userService;
 	/** The time now. */
 	static LocalDateTime timeNow = LocalDateTime.now();
 	
@@ -29,9 +34,10 @@ public class ReservationService {
 	 * @param reservationRepository the reservation repository
 	 */
 	@Autowired
-	public ReservationService(ReservationRepository reservationRepository) {
+	public ReservationService(ReservationRepository reservationRepository, UserService userService) {
 		super();
 		this.reservationRepository = reservationRepository;
+		this.userService = userService;
 	}
 	
 	/**
@@ -126,6 +132,22 @@ public class ReservationService {
 	 */
 	public List<Reservation> getAll() {
 		return reservationRepository.findAll();
+	}
+	
+	/**
+	 * Posts a ReservationEmail object to the Email service
+	 * in order to send a confirmation email to the user
+	 * @param reservation
+	 * @param resource
+	 * @author Austin D. 1811-Java-Nick 1/3/19 
+	 */
+	public void postToEmailService(Reservation reservation, Resource resource) {
+		String buildingName = resource.getBuilding().getName();
+		String resourceName = resource.getName();
+		String userEmail = userService.findUserById(reservation.getUserId()).getEmail();
+		ReservationEmail reservationEmail = new ReservationEmail(userEmail, reservation.getStartTime(), reservation.getEndTime(), buildingName, resourceName);
+		new RestTemplate().postForLocation(URI.create("http://localhost:8080/email/sendconfirmation"), reservationEmail);
+		
 	}
 
 

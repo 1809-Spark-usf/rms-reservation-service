@@ -43,7 +43,6 @@ public class Resource {
 	/** The building. */
 	@ManyToOne
 	@JoinColumn(name="building_id", nullable=false)
-	@JsonIgnore
 	private Building building;
 	
 	/** The building id. */

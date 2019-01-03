@@ -216,4 +216,8 @@ public class UserService {
  		return eventResult.getBody();
 	}
 	
+	public User findUserById(String id) {
+		return userRepository.findUserById(id);
+	}
+	
 }

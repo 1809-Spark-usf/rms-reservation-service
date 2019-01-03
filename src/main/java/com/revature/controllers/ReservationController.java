@@ -21,8 +21,10 @@ import org.springframework.web.client.RestTemplate;
 import com.revature.enumerations.Purpose;
 import com.revature.enumerations.Type;
 import com.revature.models.Reservation;
+import com.revature.models.ReservationEmail;
 import com.revature.models.Resource;
 import com.revature.services.ReservationService;
+import com.revature.services.UserService;
 
 /**
  * The ReservationController communicates with the reservation service allowing
@@ -37,15 +39,17 @@ public class ReservationController {
 	String uri;
 
 	ReservationService reservationService;
+	UserService userService;
 	
 	/**
 	 * Used to construct a ReservationService service.
 	 * @param reservationService The reservation service. 
 	 */
 	@Autowired
-	public ReservationController(ReservationService reservationService) {
+	public ReservationController(ReservationService reservationService, UserService userService) {
 		super();
 		this.reservationService = reservationService;
+		this.userService = userService;
 	}
 	
 	/**
@@ -204,6 +208,7 @@ public class ReservationController {
 		reservation.setResourceId(reservationDTO.getResourceId());
 		reservation.setCancelled(reservationDTO.isCancelled());
 		reservation.setApproved(reservationDTO.isApproved());
+		reservationService.postToEmailService(reservation,getResourceById(reservation.getResourceId()));
 		return reservationService.saveReservation(reservation);
 	}
 	

@@ -37,5 +37,35 @@ public class ReservationEmail {
 		this.buildingName = buildingName;
 		this.resourceName = resourceName;
 	}
+	public String getEmail() {
+		return email;
+	}
+	public void setEmail(String email) {
+		this.email = email;
+	}
+	public LocalDateTime getStartTime() {
+		return startTime;
+	}
+	public void setStartTime(LocalDateTime startTime) {
+		this.startTime = startTime;
+	}
+	public LocalDateTime getEndTime() {
+		return endTime;
+	}
+	public void setEndTime(LocalDateTime endTime) {
+		this.endTime = endTime;
+	}
+	public String getBuildingName() {
+		return buildingName;
+	}
+	public void setBuildingName(String buildingName) {
+		this.buildingName = buildingName;
+	}
+	public String getResourceName() {
+		return resourceName;
+	}
+	public void setResourceName(String resourceName) {
+		this.resourceName = resourceName;
+	}
 
 }
