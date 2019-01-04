@@ -207,6 +207,7 @@ public class ReservationController {
 		reservation.setResourceId(reservationDTO.getResourceId());
 		reservation.setCancelled(reservationDTO.isCancelled());
 		reservation.setApproved(reservationDTO.isApproved());
+		reservation.setReminderTime(reservationDTO.getReminderTime());
 		reservationService.postConfirmationToEmailService(reservation,
 				getResourceById(reservation.getResourceId()));
 		return reservationService.saveReservation(reservation);

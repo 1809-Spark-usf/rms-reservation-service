@@ -151,7 +151,7 @@ public class ReservationService {
 		String buildingName = resource.getBuilding().getName();
 		String resourceName = resource.getName();
 		String userEmail = userService.findUserById(reservation.getUserId()).getEmail();
-		ReservationEmail reservationEmail = new ReservationEmail(userEmail, reservation.getStartTime(), reservation.getEndTime(), buildingName, resourceName, reservation.getId());
+		ReservationEmail reservationEmail = new ReservationEmail(userEmail, reservation.getStartTime(), reservation.getEndTime(), buildingName, resourceName, reservation.getId(), reservation.getReminderTime());
 		new RestTemplate().postForLocation(URI.create(emailUri + "sendconfirmation"), reservationEmail);
 		
 	}
@@ -181,7 +181,7 @@ public class ReservationService {
 		String buildingName = resource.getBuilding().getName();
 		String resourceName = resource.getName();
 		String userEmail = userService.findUserById(reservation.getUserId()).getEmail();
-		ReservationEmail reservationEmail = new ReservationEmail(userEmail, reservation.getStartTime(), reservation.getEndTime(), buildingName, resourceName, reservation.getId());
+		ReservationEmail reservationEmail = new ReservationEmail(userEmail, reservation.getStartTime(), reservation.getEndTime(), buildingName, resourceName, reservation.getId(), reservation.getReminderTime());
 		new RestTemplate().postForLocation(URI.create(emailUri + "sendcancellation"), reservationEmail);
 	}
 

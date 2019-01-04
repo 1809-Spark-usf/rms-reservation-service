@@ -22,19 +22,23 @@ public class ReservationEmail {
 	private String resourceName;
 	/**The id of the reservation for reminder purposes*/
 	private int reservationId;
+	/**The time before the startTime that the user wants a reminder*/
+	private int reminderTime;
 	public ReservationEmail() {
 		super();
 	}
+	
 	
 	@Override
 	public String toString() {
 		return "ReservationEmail [email=" + email + ", startTime=" + startTime + ", endTime=" + endTime
 				+ ", buildingName=" + buildingName + ", resourceName=" + resourceName + ", reservationId="
-				+ reservationId + "]";
+				+ reservationId + ", reminderTime=" + reminderTime + "]";
 	}
 
+
 	public ReservationEmail(String email, LocalDateTime startTime, LocalDateTime endTime, String buildingName,
-			String resourceName, int reservationId) {
+			String resourceName, int reservationId, int reminderTime) {
 		super();
 		this.email = email;
 		this.startTime = startTime;
@@ -42,7 +46,18 @@ public class ReservationEmail {
 		this.buildingName = buildingName;
 		this.resourceName = resourceName;
 		this.reservationId = reservationId;
+		this.reminderTime = reminderTime;
 	}
+	public int getReminderTime() {
+		return reminderTime;
+	}
+
+
+	public void setReminderTime(int reminderTime) {
+		this.reminderTime = reminderTime;
+	}
+
+
 	public String getEmail() {
 		return email;
 	}
