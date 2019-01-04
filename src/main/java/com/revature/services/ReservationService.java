@@ -116,7 +116,7 @@ public class ReservationService {
 	 * @return the int
 	 */
 	public int cancelReservation(int id) {
-		return reservationRepository.cancel(id);
+		return reservationRepository.updateCancelledById(id);
 	}
 
 	

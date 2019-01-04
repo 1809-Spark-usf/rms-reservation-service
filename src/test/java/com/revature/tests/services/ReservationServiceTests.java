@@ -121,13 +121,13 @@ public class ReservationServiceTests {
 	
 	@Test(expected=BadRequestException.class)
 	public void cancelReservationIdZero() throws Exception {
-		Mockito.when(mockReservationRepository.cancel(0)).thenThrow(BadRequestException.class);
+		Mockito.when(mockReservationRepository.updateCancelledById(0)).thenThrow(BadRequestException.class);
 		reservationService.cancelReservation(0);
 	}
 	
 	@Test(expected=NotFoundException.class)
 	public void cancelReservationIdNotExist() throws Exception {
-		Mockito.when(mockReservationRepository.cancel(nonExisitingResourceId)).thenThrow(NotFoundException.class);
+		Mockito.when(mockReservationRepository.updateCancelledById(nonExisitingResourceId)).thenThrow(NotFoundException.class);
 		reservationService.cancelReservation(0);	
 	}
 		
