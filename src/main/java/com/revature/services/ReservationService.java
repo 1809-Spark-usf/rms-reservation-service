@@ -5,10 +5,12 @@ import java.time.LocalDateTime;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Example;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
+import com.netflix.hystrix.contrib.javanica.annotation.HystrixCommand;
 import com.revature.models.Reservation;
 import com.revature.models.ReservationEmail;
 import com.revature.models.Resource;
@@ -27,6 +29,9 @@ public class ReservationService {
 	UserService userService;
 	/** The time now. */
 	static LocalDateTime timeNow = LocalDateTime.now();
+	/** The URI for the Email Service */
+	@Value("${RMS_EMAIL_URL:http://localhost:8080/email/}")
+	String emailUri;
 	
 	/**
 	 * Instantiates a new reservation service.
@@ -139,14 +144,29 @@ public class ReservationService {
 	 * in order to send a confirmation email to the user
 	 * @param reservation
 	 * @param resource
-	 * @author Austin D. 1811-Java-Nick 1/3/19 
+	 * @author Austin D. 1811-Java-Nick 1/4/19 
 	 */
+	@HystrixCommand(fallbackMethod = "emailFallback")
 	public void postConfirmationToEmailService(Reservation reservation, Resource resource) {
 		String buildingName = resource.getBuilding().getName();
 		String resourceName = resource.getName();
 		String userEmail = userService.findUserById(reservation.getUserId()).getEmail();
 		ReservationEmail reservationEmail = new ReservationEmail(userEmail, reservation.getStartTime(), reservation.getEndTime(), buildingName, resourceName, reservation.getId());
-		new RestTemplate().postForLocation(URI.create("http://localhost:8080/email/sendconfirmation"), reservationEmail);
+		new RestTemplate().postForLocation(URI.create(emailUri + "sendconfirmation"), reservationEmail);
+		
+	}
+	
+	/**
+	 * A fallback method for use with Hystrix using the
+	 * Circuit Breaker pattern. If the email service fails
+	 * or if it is down, the postConfirmation method will
+	 * be replaced with this method call and the reservation
+	 * service will still be able to run. Loosely couples
+	 * the two services.
+	 * @param reservation
+	 * @param resource
+	 */
+	private void emailFallback(Reservation reservation, Resource resource) {
 		
 	}
 	
@@ -162,7 +182,7 @@ public class ReservationService {
 		String resourceName = resource.getName();
 		String userEmail = userService.findUserById(reservation.getUserId()).getEmail();
 		ReservationEmail reservationEmail = new ReservationEmail(userEmail, reservation.getStartTime(), reservation.getEndTime(), buildingName, resourceName, reservation.getId());
-		new RestTemplate().postForLocation(URI.create("http://localhost:8080/email/sendcancellation"), reservationEmail);
+		new RestTemplate().postForLocation(URI.create(emailUri + "sendcancellation"), reservationEmail);
 	}
 
 

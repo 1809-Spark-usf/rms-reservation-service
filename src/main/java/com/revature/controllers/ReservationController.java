@@ -21,7 +21,6 @@ import org.springframework.web.client.RestTemplate;
 import com.revature.enumerations.Purpose;
 import com.revature.enumerations.Type;
 import com.revature.models.Reservation;
-import com.revature.models.ReservationEmail;
 import com.revature.models.Resource;
 import com.revature.services.ReservationService;
 import com.revature.services.UserService;
@@ -190,8 +189,6 @@ public class ReservationController {
 	 */
 	@PostMapping("cancel")
 	public int cancelReservation(@RequestParam int id) {
-		Reservation reservation = reservationService.getReservationById(id);
-		
 		return reservationService.cancelReservation(id);
 	}
 	
