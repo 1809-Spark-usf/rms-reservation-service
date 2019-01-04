@@ -2,7 +2,6 @@ package com.revature.controllers;
 
 import java.net.URI;
 import java.time.LocalDateTime;
-import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,6 +17,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.client.RestTemplate;
 
+import com.revature.dtos.ReservationDto;
 import com.revature.enumerations.Purpose;
 import com.revature.enumerations.Type;
 import com.revature.models.Reservation;
@@ -58,11 +58,11 @@ public class ReservationController {
 		
 		RestTemplate restTemplate = new RestTemplate();
 		ResponseEntity<List<Resource>> response = restTemplate.exchange(
-				URI.create(this.uri + "/building/" + String.valueOf(buildingId)), HttpMethod.GET, null,
+				URI.create(this.uri + "/building/" + buildingId), HttpMethod.GET, null,
 				new ParameterizedTypeReference<List<Resource>>() {
 				});
-		List<Resource> resources = response.getBody();
-		return resources;
+		
+		return response.getBody();
 	}
 	
 	/**
@@ -75,11 +75,10 @@ public class ReservationController {
 
 		RestTemplate restTemplate = new RestTemplate();
 		ResponseEntity<List<Resource>> response = restTemplate.exchange(
-				URI.create(this.uri + "/campus/" + String.valueOf(campusId)), HttpMethod.GET, null,
+				URI.create(this.uri + "/campus/" + campusId), HttpMethod.GET, null,
 				new ParameterizedTypeReference<List<Resource>>() {
 				});
-		List<Resource> resources = response.getBody();
-		return resources;
+		return response.getBody();
 	}
 	
 	/**
@@ -150,7 +149,7 @@ public class ReservationController {
 			@RequestParam Purpose purpose, 
 			@RequestParam Integer campusId,
 			@RequestParam(required = false) Integer buildingId) {
-		List<Resource> resources = new ArrayList<>();
+		List<Resource> resources;
 		if (buildingId != null) {
 			resources = getResourcesByBuilding(buildingId);
 		} else {
@@ -195,7 +194,7 @@ public class ReservationController {
 	 * @return A reservation. 
 	 */
 	@PostMapping("")
-	public Reservation saveReservationsWithDTO(@RequestBody Reservation reservationDTO) {
+	public Reservation saveReservationsWithDTO(@RequestBody ReservationDto reservationDTO) {
 		Reservation reservation = new Reservation();
 		reservation.setPurpose(reservationDTO.getPurpose());
 		reservation.setStartTime(reservationDTO.getStartTime());

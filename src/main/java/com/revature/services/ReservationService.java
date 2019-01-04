@@ -41,7 +41,7 @@ public class ReservationService {
 	 * @return the reservations by user id
 	 */
 	public List<Reservation> getReservationsByUserId(String id) {
-		return reservationRepository.findByUserId(id);	
+		return reservationRepository.findByUserId(id);
 	}
 	
 	/**
