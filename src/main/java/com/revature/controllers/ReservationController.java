@@ -189,6 +189,7 @@ public class ReservationController {
 	 */
 	@PostMapping("cancel")
 	public int cancelReservation(@RequestParam int id) {
+		reservationService.sendCancellationToEmailService(id);
 		return reservationService.cancelReservation(id);
 	}
 	
@@ -208,8 +209,7 @@ public class ReservationController {
 		reservation.setCancelled(reservationDTO.isCancelled());
 		reservation.setApproved(reservationDTO.isApproved());
 		reservation.setReminderTime(reservationDTO.getReminderTime());
-		reservationService.postConfirmationToEmailService(reservation,
-				getResourceById(reservation.getResourceId()));
+		reservationService.sendConfirmationToEmailService(reservation);
 		return reservationService.saveReservation(reservation);
 	}
 	

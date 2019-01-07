@@ -26,6 +26,16 @@ import com.revature.enumerations.Type;
 @Table(name = "resources")
 public class Resource {
 
+	@Override
+	public String toString() {
+		return "Resource [id=" + id + ", type=" + type + ", campus=" + campus + ", building=" + building
+				+ ", buildingId=" + buildingId + ", name=" + name + ", disabled=" + disabled + ", inactive=" + inactive
+				+ ", retired=" + retired + ", availableStartDate=" + availableStartDate + ", reservableAfter="
+				+ reservableAfter + ", reservableBefore=" + reservableBefore + ", availableDays=" + availableDays
+				+ ", hasEthernet=" + hasEthernet + ", hasComputer=" + hasComputer + ", numberOfOutlets="
+				+ numberOfOutlets + ", hasMicrophone=" + hasMicrophone + "]";
+	}
+
 	/** The id. */
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
