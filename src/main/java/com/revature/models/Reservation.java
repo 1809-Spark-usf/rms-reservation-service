@@ -10,6 +10,7 @@ import javax.persistence.Table;
 import javax.persistence.Transient;
 import javax.validation.constraints.NotNull;
 
+import com.revature.dtos.ReservationDto;
 import com.revature.enumerations.Purpose;
 
 // 
@@ -257,6 +258,19 @@ public class Reservation {
 		this.cancelled = cancelled;
 		this.approved = approved;
 		this.reminderTime = reminderTime;
+	}
+	public Reservation(ReservationDto reservationDto) {
+		super();
+		this.id = reservationDto.getId();
+		this.purpose = reservationDto.getPurpose();
+		this.startTime = reservationDto.getStartTime();
+		this.endTime = reservationDto.getEndTime();
+		this.resource = reservationDto.getResource();
+		this.resourceId = reservationDto.getResourceId();
+		this.userId = reservationDto.getUserId();
+		this.cancelled = reservationDto.isCancelled();
+		this.approved = reservationDto.isApproved();
+		this.reminderTime = reservationDto.getReminderTime();
 	}
 
 	/* (non-Javadoc)

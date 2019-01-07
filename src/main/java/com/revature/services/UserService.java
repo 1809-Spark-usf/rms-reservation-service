@@ -3,6 +3,7 @@ package com.revature.services;
 import java.io.IOException;
 import java.time.LocalDate;
 import java.util.Map;
+import java.util.Random;
 
 import javax.transaction.Transactional;
 
@@ -102,14 +103,14 @@ public class UserService {
 		HttpHeaders headers = new HttpHeaders();
 		headers.setContentType(MediaType.APPLICATION_FORM_URLENCODED);
 
-		MultiValueMap<String, String> map= new LinkedMultiValueMap<String, String>();
+		MultiValueMap<String, String> map= new LinkedMultiValueMap<>();
 		map.add("code", code);
-//		map.add("redirect_uri", "http://localhost:4200/loading");
+
 		map.add("redirect_uri", env.get("REFORCE_WEBCLIENT_URL") + "loading");
 		map.add("client_id", client_id);
 		map.add("client_secret", client_secret);
 
-		HttpEntity<MultiValueMap<String, String>> request = new HttpEntity<MultiValueMap<String, String>>(map, headers);
+		HttpEntity<MultiValueMap<String, String>> request = new HttpEntity<>(map, headers);
 
 		// Make the request
 		ResponseEntity<String> result = restTemplate.postForEntity( url, request , String.class );
@@ -129,14 +130,13 @@ public class UserService {
 		}
         
         if (slackResponse.getError() != null ) {
-        	System.out.println(slackResponse.getError());
         	throw new BadRequestException("Login Failed!");
         }
         // Gets the user, adds a token expiration date as 2 weeks from today, and
         // then generates a token to be saved by the front end in local storage.
         User resultUser = slackResponse.getUser();
         resultUser.setExpiration(LocalDate.now().plusWeeks(2));
-        resultUser.setToken(resultUser.getId() + "." + (int)(Math.random() * 10000000));
+        resultUser.setToken(resultUser.getId() + "." + (int)(new Random().nextInt() * 10000000));
         // Saves or updates user in the database with last login
         userRepository.saveAndFlush(resultUser);
         
@@ -161,14 +161,13 @@ public class UserService {
 		
 		HttpHeaders headers = new HttpHeaders();
 		headers.setContentType(MediaType.APPLICATION_FORM_URLENCODED);
-		MultiValueMap<String, String> map= new LinkedMultiValueMap<String, String>();
+		MultiValueMap<String, String> map= new LinkedMultiValueMap<>();
 		map.add("code", code);
-//		map.add("redirect_uri", "http://localhost:4200/loading");
 		map.add("client_id", client_id);
 		map.add("client_secret", client_secret);
 		map.add("grant_type", "authorization_code");
 		
-		HttpEntity<MultiValueMap<String, String>> request = new HttpEntity<MultiValueMap<String, String>>(map, headers);
+		HttpEntity<MultiValueMap<String, String>> request = new HttpEntity<>(map, headers);
 		ResponseEntity<String> result = restTemplate.postForEntity( url, request , String.class );
 		// If login fails, throw exception
 		 if (!result.getStatusCode().is2xxSuccessful()) {
@@ -184,8 +183,7 @@ public class UserService {
 			e.printStackTrace();
 			throw new BadRequestException("Mapping problem");
 		}
-        System.out.println(googleResponse);
-        if (googleResponse.getAccess_token() == null ) {
+        if (googleResponse.getAccessToken() == null ) {
         	throw new BadRequestException("Login Failed!");
         }
         
@@ -207,14 +205,8 @@ public class UserService {
          		+ "}";
          
  		String eventUrl = "https://www.googleapis.com/calendar/v3/calendars/calendarId/events";
-		
- 		RestTemplate googleRestTemplate = new RestTemplate();
- 		
- 		HttpHeaders eventHeaders = new HttpHeaders();
- 		headers.add("Authorization", "Bearer " + googleResponse.getAccess_token());
+ 		headers.add("Authorization", "Bearer " + googleResponse.getAccessToken());
  		headers.setContentType(MediaType.APPLICATION_JSON);
- 
-		HttpEntity<String> googleRequest = new HttpEntity<String>(event, headers);
  		ResponseEntity<String> eventResult = restTemplate.postForEntity( eventUrl, event, String.class );
  		
  		return eventResult.getBody();

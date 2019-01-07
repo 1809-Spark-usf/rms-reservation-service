@@ -11,7 +11,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
 import com.netflix.hystrix.contrib.javanica.annotation.HystrixCommand;
-import com.netflix.hystrix.contrib.javanica.annotation.HystrixProperty;
 import com.revature.models.Reservation;
 import com.revature.models.ReservationEmail;
 import com.revature.models.Resource;
@@ -189,8 +188,7 @@ public class ReservationService {
 	 * @param reservation
 	 * @param resource
 	 */
-	private void emailFallback(Reservation reservation, Throwable e) {
-		e.printStackTrace();
+	private void emailFallback(Reservation reservation) {
 	}
 	
 	/**
@@ -216,7 +214,6 @@ public class ReservationService {
 		
 	}
 	
-	private void cancelFallback(int reservationId, Throwable e) {
-		e.printStackTrace();
+	private void cancelFallback(int reservationId) {
 	}
 }

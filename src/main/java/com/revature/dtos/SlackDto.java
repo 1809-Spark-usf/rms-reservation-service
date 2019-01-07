@@ -10,14 +10,14 @@ import com.revature.models.User;
  */
 public class SlackDto {
 	
-	public boolean ok;
-	public String access_token;
-	public String scope;
-	public User user;
-	public ObjectNode team;
-	public String warning;
-	public ObjectNode response_metadata;
-	public String error;
+	private boolean ok;
+	private String accessToken;
+	private String scope;
+	private User user;
+	private ObjectNode team;
+	private String warning;
+	private ObjectNode responseMetadata;
+	private String error;
 	
 	/**
 	 * 
@@ -51,15 +51,15 @@ public class SlackDto {
 	 * 
 	 * @return ok
 	 */
-	public String getAccess_token() {
-		return access_token;
+	public String getAccessToken() {
+		return accessToken;
 	}
 	/**
 	 * 
 	 * @param access_token
 	 */
-	public void setAccess_token(String access_token) {
-		this.access_token = access_token;
+	public void setAccessToken(String accessToken) {
+		this.accessToken = accessToken;
 	}
 	/**
 	 * 
@@ -121,21 +121,38 @@ public class SlackDto {
 	 * 
 	 * @return responese_metadata
 	 */
-	public ObjectNode getResponse_metadata() {
-		return response_metadata;
+	public ObjectNode getResponseMetadata() {
+		return responseMetadata;
 	}
 	/**
 	 * 
 	 * @param response_metadata
 	 */
-	public void setResponse_metadata(ObjectNode response_metadata) {
-		this.response_metadata = response_metadata;
+	public void setResponseMetadata(ObjectNode responseMetadata) {
+		this.responseMetadata = responseMetadata;
 	}
 	/**
 	 * No arg constructor for the SlackDto class
 	 */
 	public SlackDto() {
 		super();
+	}
+	public SlackDto(boolean ok, String accessToken, String scope, User user, ObjectNode team, String warning,
+			ObjectNode responseMetadata, String error) {
+		super();
+		this.ok = ok;
+		this.accessToken = accessToken;
+		this.scope = scope;
+		this.user = user;
+		this.team = team;
+		this.warning = warning;
+		this.responseMetadata = responseMetadata;
+		this.error = error;
+	}
+	@Override
+	public String toString() {
+		return "SlackDto [ok=" + ok + ", accessToken=" + accessToken + ", scope=" + scope + ", user=" + user + ", team="
+				+ team + ", warning=" + warning + ", responseMetadata=" + responseMetadata + ", error=" + error + "]";
 	}
 	
 
