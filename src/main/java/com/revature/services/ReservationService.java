@@ -186,9 +186,9 @@ public class ReservationService {
 	 * to run. Loosely couples the two services.
 	 * 
 	 * @param reservation
-	 * @param resource
 	 */
 	private void emailFallback(Reservation reservation) {
+	//This method is used as a fallback for sendConfirmationToEmailService
 	}
 	
 	/**
@@ -214,6 +214,15 @@ public class ReservationService {
 		
 	}
 	
+	/**
+	 * A fallback method for use with Hystrix using the Circuit Breaker pattern. If
+	 * the email service fails or if it is down, the postConfirmation method will be
+	 * replaced with this method call and the reservation service will still be able
+	 * to run. Loosely couples the two services.
+	 * 
+	 * @param reservationId
+	 */
 	private void cancelFallback(int reservationId) {
+	//This method is used as a fallback for sendCancellationToEmailService
 	}
 }

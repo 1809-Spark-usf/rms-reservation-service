@@ -19,6 +19,7 @@ import org.springframework.web.client.RestTemplate;
 
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.PropertyNamingStrategy;
 import com.revature.dtos.GoogleDto;
 import com.revature.dtos.SlackDto;
 import com.revature.exceptions.BadRequestException;
@@ -60,7 +61,7 @@ public class UserService {
 	 * @return the user
 	 * @throws Exception the exception
 	 */
-	public User checkToken(String token) throws Exception {
+	public User checkToken(String token) throws BadRequestException {
 		User user = userRepository.findByTokenAndExpirationAfter(token, LocalDate.now()).orElse(null);
 		if (user == null ) {
 			throw new BadRequestException("Credentials not found!");
@@ -92,7 +93,7 @@ public class UserService {
 	 * @return the user
 	 * @throws Exception the exception
 	 */
-	public User login(String code) throws Exception {
+	public User login(String code) throws BadRequestException {
 		final Map<String, String> env = System.getenv();
 		final String client_id = env.get("REFORCE_SLACK_CLIENT_ID");
 		final String client_secret = env.get("REFORCE_SLACK_CLIENT_SECRET");
@@ -124,7 +125,10 @@ public class UserService {
         try {
         	// Map response to string (Slack response has a lot of details, we only need User details)
 	        ObjectMapper objectMapper = new ObjectMapper();
+	        objectMapper.setPropertyNamingStrategy(
+	        	    PropertyNamingStrategy.SNAKE_CASE);
 	        slackResponse = objectMapper.readValue(resultBody, new TypeReference<SlackDto>(){});
+	        System.out.println(slackResponse);
 		} catch (IOException e) {
 			throw new BadRequestException("Mapping problem");
 		}
@@ -136,7 +140,7 @@ public class UserService {
         // then generates a token to be saved by the front end in local storage.
         User resultUser = slackResponse.getUser();
         resultUser.setExpiration(LocalDate.now().plusWeeks(2));
-        resultUser.setToken(resultUser.getId() + "." + (int)(new Random().nextInt() * 10000000));
+        resultUser.setToken(resultUser.getId() + "." + (new Random().nextInt() * 10000000));
         // Saves or updates user in the database with last login
         userRepository.saveAndFlush(resultUser);
         
