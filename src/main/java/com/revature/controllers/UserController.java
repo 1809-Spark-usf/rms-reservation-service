@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.revature.dtos.ReservationDto;
 import com.revature.exceptions.BadRequestException;
 import com.revature.models.Reservation;
 import com.revature.models.User;
@@ -44,7 +45,7 @@ public class UserController {
 	 * @throws Exception to me handled by exception handler with a status code
 	*/
 	@GetMapping("authorization")
-	public User login(@RequestParam String code, HttpServletResponse response) throws Exception {
+	public User login(@RequestParam String code, HttpServletResponse response) {
 		return this.userService.login(code);
 	}
 	
@@ -55,7 +56,7 @@ public class UserController {
 	 * @throws Exception
 	 */
 	@GetMapping("rememberme")
-	public User rememberMe(@RequestParam String token) throws Exception {
+	public User rememberMe(@RequestParam String token) {
 		return this.userService.checkToken(token);
 	}
 	/**
@@ -66,7 +67,7 @@ public class UserController {
 	 * @throws Exception
 	 */
 	@GetMapping("logout")
-	public void logout(@RequestParam String token) throws Exception {
+	public void logout(@RequestParam String token) {
 		this.userService.logout(token);
 	}
 	/**
@@ -78,8 +79,8 @@ public class UserController {
 	 * @throws Exception
 	 */
 	@GetMapping("calendar")
-	public String authorizeCalendar(@RequestParam String token, @RequestParam Reservation reservation) throws Exception {
-		return this.userService.authorizeCalendar(token, reservation);
+	public String authorizeCalendar(@RequestParam String token, @RequestParam ReservationDto reservationDto)  {
+		return this.userService.authorizeCalendar(token, new Reservation(reservationDto));
 	}
 	
 	/**

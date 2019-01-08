@@ -10,6 +10,7 @@ import javax.persistence.Table;
 import javax.persistence.Transient;
 import javax.validation.constraints.NotNull;
 
+import com.revature.dtos.ReservationDto;
 import com.revature.enumerations.Purpose;
 
 // 
@@ -52,6 +53,7 @@ public class Reservation {
 	/** The approved. */
 	private boolean approved;
 
+	private int reminderTime;
 	/**
 	 * Gets the id.
 	 *
@@ -59,6 +61,14 @@ public class Reservation {
 	 */
 	public int getId() {
 		return id;
+	}
+
+	public int getReminderTime() {
+		return reminderTime;
+	}
+
+	public void setReminderTime(int reminderTime) {
+		this.reminderTime = reminderTime;
 	}
 
 	/**
@@ -236,7 +246,7 @@ public class Reservation {
 	 * @param approved the approved
 	 */
 	public Reservation(int id, @NotNull Purpose purpose, LocalDateTime startTime, LocalDateTime endTime,
-			Resource resource, int resourceId, String userId, boolean cancelled, boolean approved) {
+			Resource resource, int resourceId, String userId, boolean cancelled, boolean approved, int reminderTime) {
 		super();
 		this.id = id;
 		this.purpose = purpose;
@@ -247,6 +257,20 @@ public class Reservation {
 		this.userId = userId;
 		this.cancelled = cancelled;
 		this.approved = approved;
+		this.reminderTime = reminderTime;
+	}
+	public Reservation(ReservationDto reservationDto) {
+		super();
+		this.id = reservationDto.getId();
+		this.purpose = reservationDto.getPurpose();
+		this.startTime = reservationDto.getStartTime();
+		this.endTime = reservationDto.getEndTime();
+		this.resource = reservationDto.getResource();
+		this.resourceId = reservationDto.getResourceId();
+		this.userId = reservationDto.getUserId();
+		this.cancelled = reservationDto.isCancelled();
+		this.approved = reservationDto.isApproved();
+		this.reminderTime = reservationDto.getReminderTime();
 	}
 
 	/* (non-Javadoc)
@@ -313,14 +337,16 @@ public class Reservation {
 		return true;
 	}
 
-	/* (non-Javadoc)
-	 * @see java.lang.Object#toString()
-	 */
 	@Override
 	public String toString() {
 		return "Reservation [id=" + id + ", purpose=" + purpose + ", startTime=" + startTime + ", endTime=" + endTime
 				+ ", resource=" + resource + ", resourceId=" + resourceId + ", userId=" + userId + ", cancelled="
-				+ cancelled + ", approved=" + approved + "]";
+				+ cancelled + ", approved=" + approved + ", reminderTime=" + reminderTime + "]";
 	}
+
+	/* (non-Javadoc)
+	 * @see java.lang.Object#toString()
+	 */
+	
 
 }

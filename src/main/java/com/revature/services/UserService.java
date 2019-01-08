@@ -3,6 +3,7 @@ package com.revature.services;
 import java.io.IOException;
 import java.time.LocalDate;
 import java.util.Map;
+import java.util.Random;
 
 import javax.transaction.Transactional;
 
@@ -18,6 +19,7 @@ import org.springframework.web.client.RestTemplate;
 
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.PropertyNamingStrategy;
 import com.revature.dtos.GoogleDto;
 import com.revature.dtos.SlackDto;
 import com.revature.exceptions.BadRequestException;
@@ -33,6 +35,10 @@ import com.revature.repositories.UserRepository;
 @Service
 public class UserService {
 	
+	public UserService() {
+		super();
+	}
+
 	/** The user repository. */
 	UserRepository userRepository;
 
@@ -55,7 +61,7 @@ public class UserService {
 	 * @return the user
 	 * @throws Exception the exception
 	 */
-	public User checkToken(String token) throws Exception {
+	public User checkToken(String token) throws BadRequestException {
 		User user = userRepository.findByTokenAndExpirationAfter(token, LocalDate.now()).orElse(null);
 		if (user == null ) {
 			throw new BadRequestException("Credentials not found!");
@@ -87,7 +93,7 @@ public class UserService {
 	 * @return the user
 	 * @throws Exception the exception
 	 */
-	public User login(String code) throws Exception {
+	public User login(String code) {
 		final Map<String, String> env = System.getenv();
 		final String client_id = env.get("REFORCE_SLACK_CLIENT_ID");
 		final String client_secret = env.get("REFORCE_SLACK_CLIENT_SECRET");
@@ -98,14 +104,14 @@ public class UserService {
 		HttpHeaders headers = new HttpHeaders();
 		headers.setContentType(MediaType.APPLICATION_FORM_URLENCODED);
 
-		MultiValueMap<String, String> map= new LinkedMultiValueMap<String, String>();
+		MultiValueMap<String, String> map= new LinkedMultiValueMap<>();
 		map.add("code", code);
-//		map.add("redirect_uri", "http://localhost:4200/loading");
+
 		map.add("redirect_uri", env.get("REFORCE_WEBCLIENT_URL") + "loading");
 		map.add("client_id", client_id);
 		map.add("client_secret", client_secret);
 
-		HttpEntity<MultiValueMap<String, String>> request = new HttpEntity<MultiValueMap<String, String>>(map, headers);
+		HttpEntity<MultiValueMap<String, String>> request = new HttpEntity<>(map, headers);
 
 		// Make the request
 		ResponseEntity<String> result = restTemplate.postForEntity( url, request , String.class );
@@ -119,20 +125,21 @@ public class UserService {
         try {
         	// Map response to string (Slack response has a lot of details, we only need User details)
 	        ObjectMapper objectMapper = new ObjectMapper();
+	        objectMapper.setPropertyNamingStrategy(
+	        	    PropertyNamingStrategy.SNAKE_CASE);
 	        slackResponse = objectMapper.readValue(resultBody, new TypeReference<SlackDto>(){});
 		} catch (IOException e) {
 			throw new BadRequestException("Mapping problem");
 		}
         
         if (slackResponse.getError() != null ) {
-        	System.out.println(slackResponse.getError());
         	throw new BadRequestException("Login Failed!");
         }
         // Gets the user, adds a token expiration date as 2 weeks from today, and
         // then generates a token to be saved by the front end in local storage.
         User resultUser = slackResponse.getUser();
         resultUser.setExpiration(LocalDate.now().plusWeeks(2));
-        resultUser.setToken(resultUser.getId() + "." + (int)(Math.random() * 10000000));
+        resultUser.setToken(resultUser.getId() + "." + (new Random().nextInt() * 10000000));
         // Saves or updates user in the database with last login
         userRepository.saveAndFlush(resultUser);
         
@@ -157,14 +164,13 @@ public class UserService {
 		
 		HttpHeaders headers = new HttpHeaders();
 		headers.setContentType(MediaType.APPLICATION_FORM_URLENCODED);
-		MultiValueMap<String, String> map= new LinkedMultiValueMap<String, String>();
+		MultiValueMap<String, String> map= new LinkedMultiValueMap<>();
 		map.add("code", code);
-//		map.add("redirect_uri", "http://localhost:4200/loading");
 		map.add("client_id", client_id);
 		map.add("client_secret", client_secret);
 		map.add("grant_type", "authorization_code");
 		
-		HttpEntity<MultiValueMap<String, String>> request = new HttpEntity<MultiValueMap<String, String>>(map, headers);
+		HttpEntity<MultiValueMap<String, String>> request = new HttpEntity<>(map, headers);
 		ResponseEntity<String> result = restTemplate.postForEntity( url, request , String.class );
 		// If login fails, throw exception
 		 if (!result.getStatusCode().is2xxSuccessful()) {
@@ -177,11 +183,9 @@ public class UserService {
 	        ObjectMapper objectMapper = new ObjectMapper();
 	        googleResponse = objectMapper.readValue(resultBody, new TypeReference<GoogleDto>(){});
 		} catch (IOException e) {
-			e.printStackTrace();
 			throw new BadRequestException("Mapping problem");
 		}
-        System.out.println(googleResponse);
-        if (googleResponse.getAccess_token() == null ) {
+        if (googleResponse.getAccessToken() == null ) {
         	throw new BadRequestException("Login Failed!");
         }
         
@@ -203,17 +207,15 @@ public class UserService {
          		+ "}";
          
  		String eventUrl = "https://www.googleapis.com/calendar/v3/calendars/calendarId/events";
-		
- 		RestTemplate googleRestTemplate = new RestTemplate();
- 		
- 		HttpHeaders eventHeaders = new HttpHeaders();
- 		headers.add("Authorization", "Bearer " + googleResponse.getAccess_token());
+ 		headers.add("Authorization", "Bearer " + googleResponse.getAccessToken());
  		headers.setContentType(MediaType.APPLICATION_JSON);
- 
-		HttpEntity<String> googleRequest = new HttpEntity<String>(event, headers);
  		ResponseEntity<String> eventResult = restTemplate.postForEntity( eventUrl, event, String.class );
  		
  		return eventResult.getBody();
+	}
+	
+	public User findUserById(String id) {
+		return userRepository.findUserById(id);
 	}
 	
 }

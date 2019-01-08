@@ -10,6 +10,7 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.data.repository.query.QueryByExampleExecutor;
 import org.springframework.stereotype.Repository;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.revature.models.Reservation;
 
@@ -41,7 +42,7 @@ public interface ReservationRepository extends JpaRepository<Reservation, Intege
 	 * @param timeNow the time now
 	 * @return the list
 	 */
-	@Query("select r from Reservation r where r.startTime > :todayNow and userId = :id")
+	@Query("select r from Reservation r where r.startTime > :todayNow and userId = :id and cancelled=false")
 	public List<Reservation> findAllByUserIdAndUpcoming(@Param("id") String id, 
 			@Param("todayNow") LocalDateTime timeNow);
 	
@@ -52,7 +53,7 @@ public interface ReservationRepository extends JpaRepository<Reservation, Intege
 	 * @param timeNow the time now
 	 * @return the list
 	 */
-	@Query("select r from Reservation r where r.startTime < :todayNow and userId = :id")
+	@Query("select r from Reservation r where r.startTime < :todayNow and userId = :id and cancelled=false")
 	public List<Reservation> findAllByUserIdAndPast(@Param("id") String id, 
 			@Param("todayNow") LocalDateTime timeNow);
 	
@@ -62,6 +63,7 @@ public interface ReservationRepository extends JpaRepository<Reservation, Intege
 	 * @param id the id
 	 * @return the list
 	 */
+	@Query(value="select * from reservations where cancelled=false", nativeQuery=true)
 	public List<Reservation> findByUserId(String id);
 	
 	/**
@@ -78,8 +80,10 @@ public interface ReservationRepository extends JpaRepository<Reservation, Intege
 	 * @param id the id
 	 * @return the int
 	 */
-	@Query(value = "UPDATE reservations SET cancelled = true WHERE id = ?1 RETURNING id", nativeQuery = true)
-	public int cancel(int id);
+	@Modifying
+	@Transactional
+	@Query(value = "UPDATE reservations r SET cancelled = true WHERE r.id = ?1", nativeQuery = true)
+	public int updateCancelledById(int id);
 	
 	/**
 	 * List all reservations.

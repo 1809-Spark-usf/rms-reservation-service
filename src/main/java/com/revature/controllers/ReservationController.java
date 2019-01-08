@@ -1,7 +1,7 @@
 package com.revature.controllers;
 
+import java.net.URI;
 import java.time.LocalDateTime;
-import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,11 +17,13 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.client.RestTemplate;
 
+import com.revature.dtos.ReservationDto;
 import com.revature.enumerations.Purpose;
 import com.revature.enumerations.Type;
 import com.revature.models.Reservation;
 import com.revature.models.Resource;
 import com.revature.services.ReservationService;
+import com.revature.services.UserService;
 
 /**
  * The ReservationController communicates with the reservation service allowing
@@ -32,62 +34,65 @@ import com.revature.services.ReservationService;
 @RequestMapping("")
 public class ReservationController {
 
-	@Value("${RMS_RESOURCE_URL:localhost:8080/resources}")
+	@Value("${RMS_RESOURCE_URL:http://localhost:8080/resources}")
 	String uri;
 
 	ReservationService reservationService;
+	UserService userService;
 	
 	/**
 	 * Used to construct a ReservationService service.
 	 * @param reservationService The reservation service. 
 	 */
 	@Autowired
-	public ReservationController(ReservationService reservationService) {
+	public ReservationController(ReservationService reservationService, UserService userService) {
 		super();
 		this.reservationService = reservationService;
+		this.userService = userService;
 	}
 	
 	/**
 	 * Returns a list of resources based on the building's identification number.
 	 * @param buildingId The identification number for a building.
 	 * @return A list of resources. 
+	 * @author Jaron 1811-Java-Nick 1/2/19
 	 */
 	private List<Resource> getResourcesByBuilding(int buildingId) {
-
+		
 		RestTemplate restTemplate = new RestTemplate();
 		ResponseEntity<List<Resource>> response = restTemplate.exchange(
-				this.uri + "/buildings/" + String.valueOf(buildingId), HttpMethod.GET, null,
+				URI.create(this.uri + "/building/" + buildingId), HttpMethod.GET, null,
 				new ParameterizedTypeReference<List<Resource>>() {
 				});
-		List<Resource> resources = response.getBody();
-		return resources;
+		return response.getBody();
 	}
 	
 	/**
 	 * Returns a list of resources based on the campus identification number.
 	 * @param campusId The identification number for a campus.
 	 * @return A list of resources. 
+	 * @author Jaron 1811-Java-Nick 1/2/19
 	 */
 	private List<Resource> getResourcesByCampus(int campusId) {
 
 		RestTemplate restTemplate = new RestTemplate();
 		ResponseEntity<List<Resource>> response = restTemplate.exchange(
-				this.uri + "/campus/" + String.valueOf(campusId), HttpMethod.GET, null,
+				URI.create(this.uri + "/campus/" + campusId), HttpMethod.GET, null,
 				new ParameterizedTypeReference<List<Resource>>() {
 				});
-		List<Resource> resources = response.getBody();
-		return resources;
+			return response.getBody();
 	}
 	
 	/**
 	 * Returns a resource based on a resource identification number.
 	 * @param id The identification number for a resource.
 	 * @return A resource. 
+	 * @author Jaron 1811-Java-Nick 1/2/19
 	 */
 	private Resource getResourceById(int id) {
 
 		String idUri = Integer.toString(id);
-		String requestUri = this.uri + idUri;
+		URI requestUri = URI.create(this.uri + "/" + idUri);
 
 		RestTemplate restTemplate = new RestTemplate();
 		Resource[] result = restTemplate.getForObject(requestUri, Resource[].class);
@@ -146,7 +151,7 @@ public class ReservationController {
 			@RequestParam Purpose purpose, 
 			@RequestParam Integer campusId,
 			@RequestParam(required = false) Integer buildingId) {
-		List<Resource> resources = new ArrayList<>();
+		List<Resource> resources;
 		if (buildingId != null) {
 			resources = getResourcesByBuilding(buildingId);
 		} else {
@@ -182,6 +187,7 @@ public class ReservationController {
 	 */
 	@PostMapping("cancel")
 	public int cancelReservation(@RequestParam int id) {
+		reservationService.sendCancellationToEmailService(id);
 		return reservationService.cancelReservation(id);
 	}
 	
@@ -191,15 +197,9 @@ public class ReservationController {
 	 * @return A reservation. 
 	 */
 	@PostMapping("")
-	public Reservation saveReservationsWithDTO(@RequestBody Reservation reservationDTO) {
-		Reservation reservation = new Reservation();
-		reservation.setPurpose(reservationDTO.getPurpose());
-		reservation.setStartTime(reservationDTO.getStartTime());
-		reservation.setEndTime(reservationDTO.getEndTime());
-		reservation.setUserId(reservationDTO.getUserId());
-		reservation.setResourceId(reservationDTO.getResourceId());
-		reservation.setCancelled(reservationDTO.isCancelled());
-		reservation.setApproved(reservationDTO.isApproved());
+	public Reservation saveReservationsWithDTO(@RequestBody ReservationDto reservationDto) {
+		Reservation reservation = new Reservation(reservationDto);
+		reservationService.sendConfirmationToEmailService(reservation);
 		return reservationService.saveReservation(reservation);
 	}
 	
