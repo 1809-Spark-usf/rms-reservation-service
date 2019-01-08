@@ -93,7 +93,7 @@ public class UserService {
 	 * @return the user
 	 * @throws Exception the exception
 	 */
-	public User login(String code) throws BadRequestException {
+	public User login(String code) {
 		final Map<String, String> env = System.getenv();
 		final String client_id = env.get("REFORCE_SLACK_CLIENT_ID");
 		final String client_secret = env.get("REFORCE_SLACK_CLIENT_SECRET");
@@ -128,7 +128,6 @@ public class UserService {
 	        objectMapper.setPropertyNamingStrategy(
 	        	    PropertyNamingStrategy.SNAKE_CASE);
 	        slackResponse = objectMapper.readValue(resultBody, new TypeReference<SlackDto>(){});
-	        System.out.println(slackResponse);
 		} catch (IOException e) {
 			throw new BadRequestException("Mapping problem");
 		}
@@ -184,7 +183,6 @@ public class UserService {
 	        ObjectMapper objectMapper = new ObjectMapper();
 	        googleResponse = objectMapper.readValue(resultBody, new TypeReference<GoogleDto>(){});
 		} catch (IOException e) {
-			e.printStackTrace();
 			throw new BadRequestException("Mapping problem");
 		}
         if (googleResponse.getAccessToken() == null ) {

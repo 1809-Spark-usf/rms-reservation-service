@@ -45,7 +45,7 @@ public class UserController {
 	 * @throws Exception to me handled by exception handler with a status code
 	*/
 	@GetMapping("authorization")
-	public User login(@RequestParam String code, HttpServletResponse response) throws Exception {
+	public User login(@RequestParam String code, HttpServletResponse response) {
 		return this.userService.login(code);
 	}
 	
@@ -56,7 +56,7 @@ public class UserController {
 	 * @throws Exception
 	 */
 	@GetMapping("rememberme")
-	public User rememberMe(@RequestParam String token) throws Exception {
+	public User rememberMe(@RequestParam String token) {
 		return this.userService.checkToken(token);
 	}
 	/**
@@ -79,7 +79,7 @@ public class UserController {
 	 * @throws Exception
 	 */
 	@GetMapping("calendar")
-	public String authorizeCalendar(@RequestParam String token, @RequestParam ReservationDto reservationDto) {
+	public String authorizeCalendar(@RequestParam String token, @RequestParam ReservationDto reservationDto)  {
 		return this.userService.authorizeCalendar(token, new Reservation(reservationDto));
 	}
 	
