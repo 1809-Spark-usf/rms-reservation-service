@@ -85,6 +85,14 @@ public interface ReservationRepository extends JpaRepository<Reservation, Intege
 	@Query(value = "UPDATE reservations r SET cancelled = true WHERE r.id = ?1", nativeQuery = true)
 	public int updateCancelledById(int id);
 	
+	@Modifying
+	@Transactional
+	@Query(value = " UPDATE RESERVATIONS SET RESOURCE_ID = ?1, START_TIME = ?2, END_TIME = ?3 WHERE ID = ?4", nativeQuery = true)
+	public int updateReservationById(int Rid, LocalDateTime startTime, LocalDateTime endTime, int id );
+	
+	
+	
+	
 	/**
 	 * List all reservations.
 	 *

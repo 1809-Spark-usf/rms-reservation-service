@@ -40,6 +40,9 @@ public class ReservationController {
 	ReservationService reservationService;
 	UserService userService;
 	
+	
+	
+
 	/**
 	 * Used to construct a ReservationService service.
 	 * @param reservationService The reservation service. 
@@ -189,6 +192,16 @@ public class ReservationController {
 	public int cancelReservation(@RequestParam int id) {
 		reservationService.sendCancellationToEmailService(id);
 		return reservationService.cancelReservation(id);
+	}
+	
+	@PostMapping("update")//update reservation
+	public boolean updateReservation(@RequestBody ReservationDto reservationDto) {
+		
+		Reservation reservation = new Reservation(reservationDto);
+		System.out.println(reservation.getResourceId());
+		return reservationService.UpdateReservationResourceId(reservation);
+		
+		
 	}
 	
 	/**

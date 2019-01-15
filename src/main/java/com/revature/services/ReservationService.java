@@ -105,6 +105,17 @@ public class ReservationService {
 	public List<Integer> getReservationResourceIds(LocalDateTime startDateTime, LocalDateTime endDateTime) {
 		return reservationRepository.findResourceIdsByStartTimeAfterAndEndTimeBefore(startDateTime, endDateTime);
 	}
+	
+	
+	public boolean UpdateReservationResourceId(Reservation reservation) {
+		
+		 reservationRepository.updateReservationById(reservation.getResourceId(),reservation.getStartTime(),reservation.getEndTime(), reservation.getId());
+		 
+		 return true;
+	}
+	
+	
+
 
 	/**
 	 * Persist reservation in the database.
