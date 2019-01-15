@@ -107,15 +107,12 @@ public class ReservationService {
 	}
 	
 	
-	public boolean UpdateReservationResourceId(Reservation reservation) {
+	public boolean updateReservationResourceId(Reservation reservation) {
 		
 		 reservationRepository.updateReservationById(reservation.getResourceId(),reservation.getStartTime(),reservation.getEndTime(), reservation.getId());
 		 
 		 return true;
 	}
-	
-	
-
 
 	/**
 	 * Persist reservation in the database.
@@ -198,9 +195,9 @@ public class ReservationService {
 	 * 
 	 * @param reservation
 	 */
-	private void emailFallback(Reservation reservation) {
-	//This method is used as a fallback for sendConfirmationToEmailService
-	}
+	// private void emailFallback(Reservation reservation) {
+	// // This method is used as a fallback for sendConfirmationToEmailService
+	// }
 	
 	/**
 	 * Posts a ReservationEmail object to the Email service in order to send a
@@ -233,7 +230,7 @@ public class ReservationService {
 	 * 
 	 * @param reservationId
 	 */
-	private void cancelFallback(int reservationId) {
-	//This method is used as a fallback for sendCancellationToEmailService
-	}
+	// private void cancelFallback(int reservationId) {
+	// //This method is used as a fallback for sendCancellationToEmailService
+	// }
 }

@@ -196,12 +196,8 @@ public class ReservationController {
 	
 	@PostMapping("update")//update reservation
 	public boolean updateReservation(@RequestBody ReservationDto reservationDto) {
-		
 		Reservation reservation = new Reservation(reservationDto);
-		System.out.println(reservation.getResourceId());
-		return reservationService.UpdateReservationResourceId(reservation);
-		
-		
+		return reservationService.updateReservationResourceId(reservation);
 	}
 	
 	/**
