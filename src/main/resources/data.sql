@@ -21,3 +21,19 @@ INSERT INTO resources (id, type, building_id, name, disabled, inactive, retired,
 
 INSERT INTO resources (id, type, building_id, name, disabled, inactive, retired, available_start_date, reservable_after, reservable_before, has_computer, number_of_outlets, has_microphone, has_ethernet) VALUES
 ('5', 1, '3', 'Block S', 'true', 'true', 'true', '2007-12-03T10:15:30', '2007-12-03T10:15:30', '2020-12-03T10:15:30', 'true', '1000', 'false', 'true');
+
+
+
+INSERT INTO SLACK_USERS (SLACK_ID, FULL_NAME, NAME) VALUES ('battondl',  'battondl@gmail.com', 'David Batton');
+
+INSERT INTO RESERVATIONS (END_TIME, PURPOSE, APPROVED, CANCELLED, REMINDER_TIME, RESOURCE_ID, START_TIME, USER_ID)
+VALUES
+('2019-01-03T13:00:00.00', true, false, 0, 1, 1, '2019-01-03T12:00:00.00', 'battondl');
+
+INSERT INTO RESERVATIONS (END_TIME, PURPOSE, APPROVED, CANCELLED, REMINDER_TIME, RESOURCE_ID, START_TIME, USER_ID)
+VALUES
+('2019-01-10T13:00:00.00', true, false, 0, 1, 1, '2019-01-10T12:00:00.00', 'battondl');
+
+INSERT INTO RESERVATIONS (END_TIME, PURPOSE, APPROVED, CANCELLED, REMINDER_TIME, RESOURCE_ID, START_TIME, USER_ID)
+VALUES
+('2019-01-15T13:00:00.00', true, false, 0, 1, 1, '2019-01-15T12:00:00.00', 'battondl');

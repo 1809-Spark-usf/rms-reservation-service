@@ -37,7 +37,11 @@ public class Reservation {
 	/** The end time. */
 	private LocalDateTime endTime;
 
-	/** The resource. */
+	/** The resource. 
+	 * !!!! Service will not run if you take out @Transient, - unknown reason at this time.
+	 * @author 1811-Java-Nick 01/08/18
+	 * @author David Batton
+	 */
 	@Transient
 	private Resource resource;
 
