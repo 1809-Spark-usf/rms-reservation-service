@@ -91,5 +91,10 @@ public interface ReservationRepository extends JpaRepository<Reservation, Intege
 	 * @return list of reservations
 	 */
 	public List<Reservation> findAll();
+	
+	@Modifying
+	@Transactional
+	@Query(value = " UPDATE RESERVATIONS SET RESOURCE_ID = ?1, START_TIME = ?2, END_TIME = ?3 WHERE ID = ?4", nativeQuery = true)
+	public int updateReservationById(int Rid, LocalDateTime startTime, LocalDateTime endTime, int id );
 
 }

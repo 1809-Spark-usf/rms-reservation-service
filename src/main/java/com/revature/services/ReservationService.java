@@ -225,4 +225,11 @@ public class ReservationService {
 	private void cancelFallback(int reservationId) {
 	//This method is used as a fallback for sendCancellationToEmailService
 	}
+	
+	public boolean UpdateReservationResourceId(Reservation reservation) {
+		
+		 reservationRepository.updateReservationById(reservation.getResourceId(),reservation.getStartTime(),reservation.getEndTime(), reservation.getId());
+		 
+		 return true;
+	}
 }
