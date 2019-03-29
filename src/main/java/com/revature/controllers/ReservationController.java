@@ -211,7 +211,7 @@ public class ReservationController {
 	@PostMapping("")
 	@ResponseStatus(HttpStatus.CREATED)
 	public Reservation saveReservationsWithDTO(@RequestBody ReservationDto reservationDto) {
-		if (reservationDto.getUserId() == null || reservationDto.getUserId() == "")
+		if (reservationDto.getUserId() == null || reservationDto.getUserId().equals(""))
 			throw new HttpClientErrorException(HttpStatus.BAD_REQUEST);
 
 		Reservation reservation = new Reservation(reservationDto);
