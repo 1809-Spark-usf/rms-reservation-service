@@ -8,13 +8,17 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.http.HttpMethod;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.client.RestTemplate;
 
 import com.revature.dtos.ReservationDto;
@@ -27,7 +31,8 @@ import com.revature.services.UserService;
 
 /**
  * The ReservationController communicates with the reservation service allowing
- * for access to the database. The controller selects a method by its mapping. 
+ * for access to the database. The controller selects a method by its mapping.
+ * 
  * @author 1811-Java-Nick 12/27/18
  */
 @RestController
@@ -39,10 +44,11 @@ public class ReservationController {
 
 	ReservationService reservationService;
 	UserService userService;
-	
+
 	/**
 	 * Used to construct a ReservationService service.
-	 * @param reservationService The reservation service. 
+	 * 
+	 * @param reservationService The reservation service.
 	 */
 	@Autowired
 	public ReservationController(ReservationService reservationService, UserService userService) {
@@ -50,15 +56,16 @@ public class ReservationController {
 		this.reservationService = reservationService;
 		this.userService = userService;
 	}
-	
+
 	/**
 	 * Returns a list of resources based on the building's identification number.
+	 * 
 	 * @param buildingId The identification number for a building.
-	 * @return A list of resources. 
+	 * @return A list of resources.
 	 * @author Jaron 1811-Java-Nick 1/2/19
 	 */
 	private List<Resource> getResourcesByBuilding(int buildingId) {
-		
+
 		RestTemplate restTemplate = new RestTemplate();
 		ResponseEntity<List<Resource>> response = restTemplate.exchange(
 				URI.create(this.uri + "/building/" + buildingId), HttpMethod.GET, null,
@@ -66,27 +73,28 @@ public class ReservationController {
 				});
 		return response.getBody();
 	}
-	
+
 	/**
 	 * Returns a list of resources based on the campus identification number.
+	 * 
 	 * @param campusId The identification number for a campus.
-	 * @return A list of resources. 
+	 * @return A list of resources.
 	 * @author Jaron 1811-Java-Nick 1/2/19
 	 */
 	private List<Resource> getResourcesByCampus(int campusId) {
 
 		RestTemplate restTemplate = new RestTemplate();
-		ResponseEntity<List<Resource>> response = restTemplate.exchange(
-				URI.create(this.uri + "/campus/" + campusId), HttpMethod.GET, null,
-				new ParameterizedTypeReference<List<Resource>>() {
+		ResponseEntity<List<Resource>> response = restTemplate.exchange(URI.create(this.uri + "/campus/" + campusId),
+				HttpMethod.GET, null, new ParameterizedTypeReference<List<Resource>>() {
 				});
-			return response.getBody();
+		return response.getBody();
 	}
-	
+
 	/**
 	 * Returns a resource based on a resource identification number.
+	 * 
 	 * @param id The identification number for a resource.
-	 * @return A resource. 
+	 * @return A resource.
 	 * @author Jaron 1811-Java-Nick 1/2/19
 	 */
 	private Resource getResourceById(int id) {
@@ -99,14 +107,15 @@ public class ReservationController {
 		return result[0];
 
 	}
-	
+
 	/**
-	 * Return a list of upcoming reservations if the user has any.
-	 * Otherwise, return a list of all reservations for the user.
-	 * @param id User that is logged in.
-	 * @param upcoming If true, return a list of upcoming reservations. 
-	 * 		  		   Else, return a list of all reservations.
-	 * @return A list of reservations. 
+	 * Return a list of upcoming reservations if the user has any. Otherwise, return
+	 * a list of all reservations for the user.
+	 * 
+	 * @param id       User that is logged in.
+	 * @param upcoming If true, return a list of upcoming reservations. Else, return
+	 *                 a list of all reservations.
+	 * @return A list of reservations.
 	 */
 	@GetMapping("users")
 	public List<Reservation> getReservationsByUser(@RequestParam String id,
@@ -125,31 +134,32 @@ public class ReservationController {
 		}
 		return userList;
 	}
+
 	/**
 	 * Returns a reservation based on a resource identification number.
+	 * 
 	 * @param id The identification number for a resource.
-	 * @return A reservation. 
+	 * @return A reservation.
 	 */
 	@GetMapping("id")
 	public Reservation getReservationById(@RequestParam int id) {
 		return reservationService.getReservationById(id);
 	}
-	
+
 	/**
 	 * Returns a list of all available resources between startTime and endTime,
 	 * purpose, and whether there is a buildingId or not.
-	 * @param startTime Initial time for resources.
-	 * @param endTime Cutoff time for resources.
-	 * @param purpose An enumeration, 0 is interview, 1 is panel.
-	 * @param campusId The identification number for a campus.
+	 * 
+	 * @param startTime  Initial time for resources.
+	 * @param endTime    Cutoff time for resources.
+	 * @param purpose    An enumeration, 0 is interview, 1 is panel.
+	 * @param campusId   The identification number for a campus.
 	 * @param buildingId The identification number for a building.
-	 * @return A list of resources. 
+	 * @return A list of resources.
 	 */
 	@GetMapping("available")
-	public List<Resource> getAvailableResources(@RequestParam String startTime, 
-			@RequestParam String endTime,
-			@RequestParam Purpose purpose, 
-			@RequestParam Integer campusId,
+	public List<Resource> getAvailableResources(@RequestParam String startTime, @RequestParam String endTime,
+			@RequestParam Purpose purpose, @RequestParam Integer campusId,
 			@RequestParam(required = false) Integer buildingId) {
 		List<Resource> resources;
 		if (buildingId != null) {
@@ -157,8 +167,7 @@ public class ReservationController {
 		} else {
 			resources = getResourcesByCampus(campusId);
 		}
-		List<Integer> checkList = reservationService
-				.getReservationResourceIds(LocalDateTime.parse(startTime),
+		List<Integer> checkList = reservationService.getReservationResourceIds(LocalDateTime.parse(startTime),
 				LocalDateTime.parse(endTime));
 
 		for (int resourceId : checkList) {
@@ -170,46 +179,59 @@ public class ReservationController {
 		}
 		return resources;
 	}
-	
+
 	/**
 	 * Persist a reservation in the database.
+	 * 
 	 * @param reservation A reservation object to be persisted in the database.
-	 * @return A reservation. 
+	 * @return A reservation.
 	 */
 	public Reservation saveReservation(@RequestBody Reservation reservation) {
 		return reservationService.saveReservation(reservation);
 	}
-	
+
 	/**
 	 * Updates Reservation in database to "cancelled".
+	 * 
 	 * @param id The identification number for a reservation.
-	 * @return The id of the reservation that was updated. 
+	 * @return The id of the reservation that was updated.
 	 */
 	@PostMapping("cancel")
 	public int cancelReservation(@RequestParam int id) {
 		reservationService.sendCancellationToEmailService(id);
 		return reservationService.cancelReservation(id);
 	}
-	
+
 	/**
 	 * Persists a reservation object in the database.
+	 * 
 	 * @param reservationDTO The reservation object.
-	 * @return A reservation. 
+	 * @return A reservation.
 	 */
 	@PostMapping("")
+	@ResponseStatus(HttpStatus.CREATED)
 	public Reservation saveReservationsWithDTO(@RequestBody ReservationDto reservationDto) {
+		if (reservationDto.getUserId() == null || reservationDto.getUserId().equals(""))
+			throw new HttpClientErrorException(HttpStatus.BAD_REQUEST);
+
 		Reservation reservation = new Reservation(reservationDto);
 		reservationService.sendConfirmationToEmailService(reservation);
 		return reservationService.saveReservation(reservation);
 	}
-	
+
 	/**
 	 * Get a list of all reservations.
-	 * @return A list of reservations. 
+	 * 
+	 * @return A list of reservations.
 	 */
 	@GetMapping("")
 	public List<Reservation> getAll() {
 		return reservationService.getAll();
 	}
 
+	@ExceptionHandler
+	public ResponseEntity<String> handleHttpClientException(HttpClientErrorException e) {
+		String message = e.getMessage();
+		return ResponseEntity.status(e.getStatusCode()).body(message);
+	}
 }
