@@ -4,17 +4,17 @@ spring:
 
  # Set current profile with local as default
   profiles:
-    active: ${RMS_APP_PROFILE:local}, ${RMS_APP_PROFILE:h2}  
+    active: ${RMS_APP_PROFILE:local}, ${RMS_APP_DATABASE_PROFILE:h2}
 
 ---
 spring:
   profiles: local
-  
+
   # Provide configuration location in the local profile
   cloud:
-    config:
-      uri: http://localhost:8888
-
+   config:
+     uri: http://localhost:8888
+     
 ---
 spring:
   profiles: clouddev
@@ -23,4 +23,3 @@ spring:
   cloud:
     config:
       uri: http://mitchell-rms-1500652919.us-west-1.elb.amazonaws.com/rms-config/ 
-
