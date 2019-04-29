@@ -2,6 +2,7 @@ package com.revature.controllers;
 
 import java.net.URI;
 import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -167,8 +168,15 @@ public class ReservationController {
 		} else {
 			resources = getResourcesByCampus(campusId);
 		}
-		List<Integer> checkList = reservationService.getReservationResourceIds(LocalDateTime.parse(startTime),
-				LocalDateTime.parse(endTime));
+
+		//Formatter to convert Times from Strings to LocalDateTime
+		DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+		
+		//Converted values
+		LocalDateTime start = LocalDateTime.parse(startTime, formatter);
+		LocalDateTime end = LocalDateTime.parse(endTime, formatter);
+		
+		List<Integer> checkList = reservationService.getReservationResourceIds(start, end);
 
 		for (int resourceId : checkList) {
 			resources.removeIf(r -> r.getId() == resourceId);
