@@ -35,8 +35,6 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.revature.controllers.ReservationController;
 import com.revature.dtos.ReservationDto;
 import com.revature.enumerations.Purpose;
-import com.revature.models.Building;
-import com.revature.models.Campus;
 import com.revature.models.Reservation;
 import com.revature.models.Resource;
 import com.revature.services.ReservationService;
@@ -205,7 +203,7 @@ public class ReservationControllerTests {
 	public void successfulDTOSavePost() throws JsonProcessingException, Exception {
 		// setup all objects needed for the test
 		// returns 400, content type not set
-		// TO DO: fix
+		// TODO: fix
 		int idToSave = 19;
 		ReservationDto reservation = new ReservationDto();
 		Resource resource = new Resource();
