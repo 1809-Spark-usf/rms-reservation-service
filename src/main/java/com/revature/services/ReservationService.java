@@ -16,6 +16,7 @@ import com.revature.models.ReservationEmail;
 import com.revature.models.Resource;
 import com.revature.repositories.ReservationRepository;
 
+
 import com.google.api.client.auth.oauth2.Credential;
 import com.google.api.client.extensions.java6.auth.oauth2.AuthorizationCodeInstalledApp;
 import com.google.api.client.extensions.jetty.auth.oauth2.LocalServerReceiver;
@@ -163,6 +164,7 @@ public class ReservationService {
 
 	}
 
+
 	/**
 	 * Gets the reservation by criteria.
 	 *
@@ -201,6 +203,7 @@ public class ReservationService {
 				reservation.getEndTime(), buildingName, resourceName, reservation.getId(),
 				reservation.getReminderTime());
 
+	
 		new RestTemplate().postForLocation(URI.create(emailUri + "sendconfirmation"), reservationEmail);
 	}
 
@@ -215,6 +218,7 @@ public class ReservationService {
 	private void emailFallback(Reservation reservation) {
 		// This method is used as a fallback for sendConfirmationToEmailService
 	}
+
 
 	/**
 	 * Posts a ReservationEmail object to the Email service in order to send a
@@ -235,6 +239,7 @@ public class ReservationService {
 				reservation.getEndTime(), buildingName, resourceName, reservation.getId(),
 				reservation.getReminderTime());
 
+
 		new RestTemplate().postForLocation(URI.create(emailUri + "sendcancellation"), reservationEmail);
 
 	}
@@ -247,6 +252,7 @@ public class ReservationService {
 	 * 
 	 * @param reservationId
 	 */
+
 	// private void cancelFallback(int reservationId) {
 	// //This method is used as a fallback for sendCancellationToEmailService
 	// }

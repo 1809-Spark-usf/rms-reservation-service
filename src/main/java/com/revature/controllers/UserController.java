@@ -46,7 +46,6 @@ public class UserController {
 	*/
 	@GetMapping("authorization")
 	public User login(@RequestParam String code, HttpServletResponse response) {
-		System.out.println("*****     *****     " + code + "     *****     *****");
 		return this.userService.login(code);
 	}
 	
@@ -58,7 +57,6 @@ public class UserController {
 	 */
 	@GetMapping("rememberme")
 	public User rememberMe(@RequestParam String token) {
-		System.out.println(token);
 		return this.userService.checkToken(token);
 	}
 	/**

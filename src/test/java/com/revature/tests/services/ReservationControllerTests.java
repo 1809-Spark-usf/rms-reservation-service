@@ -9,12 +9,19 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.handler;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
+
 import java.time.LocalDateTime;
+
+import java.util.ArrayList;
+
 
 import javax.persistence.EntityNotFoundException;
 
 import org.junit.Before;
+
 import org.junit.Ignore;
+
+
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
@@ -34,9 +41,13 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.revature.controllers.ReservationController;
 import com.revature.dtos.ReservationDto;
+
 import com.revature.enumerations.Purpose;
 import com.revature.models.Reservation;
 import com.revature.models.Resource;
+
+import com.revature.models.Reservation;
+
 import com.revature.services.ReservationService;
 import com.revature.services.UserService;
 
@@ -67,7 +78,6 @@ public class ReservationControllerTests {
 	}
 
 	@Test
-	
 	public void noReservationsMatchingUserGet() throws Exception {
 
 		String badUserId = "This cannot possibly be a user ID";
@@ -198,6 +208,7 @@ public class ReservationControllerTests {
 				.accept(MediaType.APPLICATION_JSON_UTF8)).andDo(print()).andExpect(status().isBadRequest());
 	}
 
+
 	
 	@Ignore
 	public void successfulDTOSavePost() throws JsonProcessingException, Exception {
@@ -219,6 +230,7 @@ public class ReservationControllerTests {
 		System.out.println(reservation);
 
 		byte[] result = om.writeValueAsBytes(reservation);
+
 
 		Mockito.when(reservationService.saveReservation(any(Reservation.class))).thenReturn(new Reservation(reservation));
 

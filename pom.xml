@@ -113,6 +113,7 @@
 			<artifactId>spring-boot-starter-actuator</artifactId>
 		</dependency>
 
+
 		<dependency>
 			<groupId>io.springfox</groupId>
 			<artifactId>springfox-swagger2</artifactId>
@@ -142,6 +143,7 @@
 			<groupId>com.google.oauth-client</groupId>
 			<artifactId>google-oauth-client-jetty</artifactId>
 			<version>1.23.0</version>
+
 		</dependency>
 
 	</dependencies>

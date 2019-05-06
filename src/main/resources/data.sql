@@ -8,6 +8,7 @@ INSERT INTO buildings (id, name, campus_id) VALUES ('4', 'Cubicle 9', '2');
 INSERT INTO buildings (id, name, campus_id) VALUES ('5', 'The BNKR', '2');
 
 INSERT INTO resources (id, type, building_id, name, disabled, inactive, retired, available_start_date, reservable_after, reservable_before, has_computer, number_of_outlets, has_microphone, has_ethernet) VALUES
+
 ('1', 0, '1', 'Block L', 'false', 'true', 'false', '2007-12-03T10:15:30', '2007-12-03T10:15:30', '2030-12-03T10:15:30', 'true', '7', 'true', 'false');
 
 INSERT INTO resources (id, type, building_id, name, disabled, inactive, retired, available_start_date, reservable_after, reservable_before, has_computer, number_of_outlets, has_microphone, has_ethernet) VALUES

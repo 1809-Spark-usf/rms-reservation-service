@@ -1,5 +1,6 @@
 package com.revature.controllers;
 
+
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
@@ -27,6 +28,7 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.client.RestTemplate;
 
+
 import com.google.api.client.auth.oauth2.Credential;
 import com.google.api.client.extensions.java6.auth.oauth2.AuthorizationCodeInstalledApp;
 import com.google.api.client.extensions.jetty.auth.oauth2.LocalServerReceiver;
@@ -42,6 +44,7 @@ import com.google.api.services.calendar.Calendar;
 import com.google.api.services.calendar.CalendarScopes;
 import com.google.api.services.calendar.model.Event;
 import com.google.api.services.calendar.model.EventDateTime;
+
 import com.revature.dtos.ReservationDto;
 import com.revature.enumerations.Purpose;
 import com.revature.enumerations.Type;
@@ -77,6 +80,7 @@ public class ReservationController {
 		this.reservationService = reservationService;
 		this.userService = userService;
 	}
+
 	
 	/**
 	 * 
@@ -119,6 +123,7 @@ public class ReservationController {
 		LocalServerReceiver receiver = new LocalServerReceiver.Builder().setPort(9001).build();
 		return new AuthorizationCodeInstalledApp(flow, receiver).authorize("user");
 	}
+
 
 
 	/**
@@ -231,8 +236,20 @@ public class ReservationController {
 		} else {
 			resources = getResourcesByCampus(campusId);
 		}
+
 		List<Integer> checkList = reservationService.getReservationResourceIds(LocalDateTime.parse(startTime),
 				LocalDateTime.parse(endTime));
+
+
+		//Formatter to convert Times from Strings to LocalDateTime
+		DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+		
+		//Converted values
+		LocalDateTime start = LocalDateTime.parse(startTime, formatter);
+		LocalDateTime end = LocalDateTime.parse(endTime, formatter);
+		
+		List<Integer> checkList = reservationService.getReservationResourceIds(start, end);
+
 
 		for (int resourceId : checkList) {
 			resources.removeIf(r -> r.getId() == resourceId);
@@ -262,7 +279,9 @@ public class ReservationController {
 	 */
 	@PostMapping("cancel")
 	public int cancelReservation(@RequestParam int id) {
+
 		//reservationService.sendCancellationToEmailService(id);
+
 		return reservationService.cancelReservation(id);
 	}
 
@@ -271,6 +290,7 @@ public class ReservationController {
 	 * 
 	 * @param reservationDTO The reservation object.
 	 * @return A reservation.
+
 	 * @throws IOException 
 	 * @throws GeneralSecurityException 
 	 */
@@ -311,6 +331,7 @@ public class ReservationController {
         	System.out.printf("Event created: %s\n", event.getHtmlLink());
         	
         	
+	
 		return reservationService.saveReservation(reservation);
 	}
 
