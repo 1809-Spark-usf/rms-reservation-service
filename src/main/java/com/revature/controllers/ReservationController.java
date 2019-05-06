@@ -8,6 +8,7 @@ import java.io.InputStreamReader;
 import java.net.URI;
 import java.security.GeneralSecurityException;
 import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.Collections;
 import java.util.List;
 
@@ -28,7 +29,6 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.client.RestTemplate;
 
-
 import com.google.api.client.auth.oauth2.Credential;
 import com.google.api.client.extensions.java6.auth.oauth2.AuthorizationCodeInstalledApp;
 import com.google.api.client.extensions.jetty.auth.oauth2.LocalServerReceiver;
@@ -44,7 +44,6 @@ import com.google.api.services.calendar.Calendar;
 import com.google.api.services.calendar.CalendarScopes;
 import com.google.api.services.calendar.model.Event;
 import com.google.api.services.calendar.model.EventDateTime;
-
 import com.revature.dtos.ReservationDto;
 import com.revature.enumerations.Purpose;
 import com.revature.enumerations.Type;
@@ -248,8 +247,6 @@ public class ReservationController {
 		LocalDateTime start = LocalDateTime.parse(startTime, formatter);
 		LocalDateTime end = LocalDateTime.parse(endTime, formatter);
 		
-		List<Integer> checkList = reservationService.getReservationResourceIds(start, end);
-
 
 		for (int resourceId : checkList) {
 			resources.removeIf(r -> r.getId() == resourceId);
