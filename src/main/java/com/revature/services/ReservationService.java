@@ -184,6 +184,11 @@ public class ReservationService {
 	public List<Reservation> getAll() {
 		return reservationRepository.findAll();
 	}
+	
+	public Reservation updateReservation(Reservation res) {
+		return reservationRepository.save(res);
+			
+	}
 
 	/**
 	 * Posts a ReservationEmail object to the Email service in order to send a
