@@ -7,6 +7,9 @@ package com.revature.exceptions;
  */
 public class BadRequestException extends RuntimeException {
 
+	private static final long serialVersionUID = 1L;
+
+
 	/**
 	 * No arg constructor for the BadRequestException class
 	 */
