@@ -98,6 +98,8 @@ public class UserService {
 		final String client_id = env.get("REFORCE_SLACK_CLIENT_ID");
 		final String client_secret = env.get("REFORCE_SLACK_CLIENT_SECRET");
 
+
+
 		RestTemplate restTemplate = new RestTemplate();
 		String url = "https://slack.com/api/oauth.access";
 		
@@ -131,7 +133,7 @@ public class UserService {
 		} catch (IOException e) {
 			throw new BadRequestException("Mapping problem");
 		}
-        
+
         if (slackResponse.getError() != null ) {
         	throw new BadRequestException("Login Failed!");
         }
